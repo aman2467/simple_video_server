@@ -1,42 +1,50 @@
 
-Light-weight Video-server(no audio) features:
+# Video-server(no audio) features:
 
 	1> Can capture video data using V4L2.
 		1.1> can capture from provided device at load-time.
 		1.2> Support for UVC devices(USB-camera/Webcams).
+	Dependencies :	1. Works with V4l2 video source only.
 
 	2> Can Imprint OSD over video data.
 		2.1> FIVE OSD-icon window support.
 		2.2> FIVE OSD-text window support.
-		2.3> All properties of each window can be controlled at run-time.
-		2.4> Database for icons should be provided by user in the same format as of video data.
+		2.3> All properties of each window can be controlled at run-time.		(Not Implemented)
+		2.4> Database for icons should be provided by user at compile time.
+	Dependencies :	1. OSD data MUST be same format as video data.
 
 	3> Can record video locally.
-		3.1> Option to select record type at run-time.
-		3.2> File can be recorded as RAW or ENCODED(ex: h.264).
-		3.3> File saving will be on basis of time-stamp.
+		3.1> Option to select record type at run-time.					(Not Implemented, by default Raw only)
+		3.2> File can be recorded as RAW or ENCODED(ex: h.264).			(Not Implemented, only Raw can be recorded)
+		3.3> File saving will be on basis of time-stamp.				(Not Implemented, user have to provide a name)
 		3.4> Saved file-location should be mentioned at compile-time.
+	Dependencies :	No.
 
 	4> Can save JPEG snapshot locally.
-		4.1> Option to save with or without OSD data at run-time.
-		4.2> Snapshot will be taken only on user's request.
+		4.1> Option to save with or without OSD data at run-time.		(With OSD, if OSD is running)
+		4.2> Snapshot will be taken only on user's request.				(Not Implemented, every 25th frame will be saved automatically)
 		4.3> File saving will be on basis of time-stamp.
 		4.4> Saved file-location should be mentioned at compile-time.
+	Dependencies :	No.
 
-	5> Can transmit video data over network.
+	5> Can transmit video data over network.							(Not Implemented)
 		5.1> Video can either be RAW or ENCODED as per user's choice.
 		5.2> Only single stream will be available.
 
-	6> All features can be controlled locally as well as remotely.
-		6.1> A separate user-app will be there to communicate with video-server at run-time.
-		6.2> Communication between user-app and video-server will be based on SOCKET comm.
+	6> All features can be controlled locally as well as remotely.								(Not Implemented)
+		6.1> A separate user-app will be there to communicate with video-server at run-time.	(Not Implemented)
+		6.2> Communication between user-app and video-server will be based on SOCKET comm.		(Not Implemented)
 
 	7> Features with video-server will run, can be controlled by user at load-time.
 		7.1> Any feature from video pipeline can be removed at load-time.
 
 	8> Can apply Video Algorithms(one or multiple) at run-time on user's choice.
 		8.1> Removing chroma from video.
-		8.2> face-recognition.
-		8.3> Thermal video, etc.
+		8.2> Cartoonise the video/snapshot.
+		8.3> Thermal equivalent of video.		(Not Implemented)
+		8.4> face-recognition, etc.				(Not Implemented)
 
+
+# Known Issue :
+				1. Sometimes frames are repeating.
 
