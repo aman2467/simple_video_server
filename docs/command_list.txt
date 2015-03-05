@@ -1,0 +1,14 @@
+#################################################################################
+               Command list implemented to control video-server
+#################################################################################
+
+# Command List :
+
+	1. takesnap <0/1>
+		0 -> Will save a JPEG snapshot
+		1 -> Will save a Raw frame
+
+	2. recordvideo <start/stop>
+		start -> starts recording video
+		stop  -> stops recording video
+		
