@@ -23,6 +23,7 @@
 #define NUM_BUFFER 10
 #define OSD_MAX_WINDOW 10
 #define BPP 2
+#define SER_PORT 2467
 
 /***************************************************************************/
 
@@ -61,9 +62,58 @@
 #define NONE " "
 #endif
 
+typedef struct {
+	int hour;
+	int min;
+	int sec;
+	int day;
+	int mon;
+	int year;
+} DATE_TIME;
+
+struct record_control {
+	int record;
+	int osd_on;
+};
+
+struct osd_control {
+	int win_enable[OSD_MAX_WINDOW];
+	int win_x[OSD_MAX_WINDOW];
+	int win_y[OSD_MAX_WINDOW];
+	int win_w[OSD_MAX_WINDOW];
+	int win_h[OSD_MAX_WINDOW];
+	char win_text[OSD_MAX_WINDOW/2][25];
+	char win_file[OSD_MAX_WINDOW/2][50];
+};
+
+struct algo_control {
+	int enable;
+	int type;
+};
+
+struct nw_control {
+	char ip[16];
+	int port;
+};
+
+struct gen_settings {
+	int dummy;
+};
+
+typedef struct server_config {
+	struct record_control image;
+	struct record_control video;
+	struct osd_control osd;
+	struct algo_control algo;
+	struct nw_control nw;
+	struct gen_settings settings;
+} SERVER_CONFIG;
+
 int KillCaptureThread;
 int KillOsdThread;
 int KillFilerecordThread;
 int KillJpegsaveThread;
 void apply_algo(char *, int);
+void getcurrenttime(DATE_TIME *);
+
 #endif

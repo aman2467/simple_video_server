@@ -18,35 +18,49 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 #include <pthread.h>
 #include <sys/time.h>
 #include <time.h>
 #include <common.h>
+#include <command_list.h>
 #include <osd_thread.h>
 
 int	g_enable_osdthread;
 int	g_enable_jpegsavethread;
 int	g_enable_filerecordthread;
-char g_filename[40]="records/videos/raw/raw.yuv";
+
+int g_videosavetype = 0;
+int g_imagesavetype = 0;
 char g_video_device[30]="/dev/video0";
-int g_capture_width = 752;
-int g_capture_height = 416;
+int g_capture_width = 848;
+int g_capture_height = 480;
+
 int g_writeflag = 0;
 int g_osdflag = 0;
+
 unsigned int g_framesize = 0;
 unsigned char *g_jpeg_frame;
 int g_jpeg_quality = 100;
-int g_jpeg_save;
-int g_algo_bw = 1;
+int g_image_save;
+
+int g_algo_bw = 0;
 int g_algo_cartoon = 0;
-int g_algo_enable = 1;
+int g_algo_enable = 0;
+
 int g_take_snapshot;
+int g_record_video;
+
 char *g_framebuff[NUM_BUFFER] = {NULL};
 char *g_osdbuff[NUM_BUFFER] = {NULL};
 char *ascii_string;
 struct osdwindow osdwin[OSD_MAX_WINDOW];
 char ascii_data[STRING_WIDTH*TEXT_HEIGHT*TEXT_WIDTH*BPP];
 int current_task;
+SERVER_CONFIG g_server_config;
 
 extern void *captureThread(void *);
 extern void *filerecordThread(void *);
@@ -66,9 +80,8 @@ void usage(char *exename)
 	printf(CYAN"\tUsage: "YELLOW"%s "GREEN"<options>"NONE"\n",exename);
 	printf(CYAN"\toptions:\n");
 	printf(GREEN"\t\tosd              "NONE":"YELLOW" To enable OSD\n");
-	printf(GREEN"\t\trawsave          "NONE":"YELLOW" To enable raw video save\n");
-	printf(GREEN"\t\tjpeg             "NONE":"YELLOW" To enable JPEG snapshot save\n");
-	printf(GREEN"\t\t-o <filename>    "NONE":"YELLOW" To save raw video to given filename\n");
+	printf(GREEN"\t\tfilesave         "NONE":"YELLOW" To enable video save\n");
+	printf(GREEN"\t\timagesave        "NONE":"YELLOW" To enable snapshot save\n");
 	printf(GREEN"\t\t-d <device>      "NONE":"YELLOW" To capture video from given device\n");
 	printf(GREEN"\t\t-w <width>       "NONE":"YELLOW" Supported capture width\n");
 	printf(GREEN"\t\t-h <height>      "NONE":"YELLOW" Supported capture height"NONE"\n");
@@ -88,6 +101,16 @@ int main(int argc, char **argv)
 	int threadStatus = 0;
 	pthread_t tCaptureThread, tOsdThread, tFilerecordThread, tJpegsaveThread;
 	int i;
+	int command;
+	int value;
+	int ret = 0;
+	char commandstr[4];
+	char status[5]={0};
+	char userdata[30];
+	char data[26];
+	int sock_fd;
+	socklen_t slen,clen;
+	struct sockaddr_in ser_addr,cli_addr;
 
 	g_enable_osdthread = FALSE;
 	g_enable_filerecordthread = FALSE;
@@ -99,12 +122,10 @@ int main(int argc, char **argv)
 	for(i=1;i<argc;i++) {
 		if (strcmp(argv[i], "osd") == 0) {
 			g_enable_osdthread = TRUE;
-		} else if (strcmp(argv[i], "rawsave") == 0) {
+		} else if (strcmp(argv[i], "filesave") == 0) {
 			g_enable_filerecordthread = TRUE;
-		} else if (strcmp(argv[i], "jpeg") == 0) {
+		} else if (strcmp(argv[i], "imagesave") == 0) {
 			g_enable_jpegsavethread = TRUE;
-		} else if (strcmp(argv[i], "-o") == 0) {
-			strcpy(g_filename+19,argv[++i]);
 		} else if (strcmp(argv[i], "-d") == 0) {
 			strcpy(g_video_device,argv[++i]);
 		} else if (strcmp(argv[i], "-w") == 0) {
@@ -160,7 +181,18 @@ int main(int argc, char **argv)
 		pr_dbg("JPEG Save Thread created\n");
 		threadStatus |= JPEGSAVE_THR;
 	}
-
+	if((sock_fd=socket(AF_INET,SOCK_DGRAM,0))<0) {/* socket creation  */
+		perror("socket");
+		exit(0);
+	}
+	ser_addr.sin_family=AF_INET;/* domain family is set to ipv4*/
+	ser_addr.sin_port=htons(SER_PORT);
+	ser_addr.sin_addr.s_addr=inet_addr("0.0.0.0");
+	slen=sizeof(ser_addr);
+	if(bind(sock_fd,(const struct sockaddr *)&ser_addr,slen)<0) {
+		perror("bind");
+		exit(0);
+	}
 #ifdef _DEBUG
 	pr_dbg(YELLOW"/************************************************************/"NONE"\n");
 	pr_dbg(CYAN"\tCapture Device \t\t:\t"GREEN" %s"NONE"\n", g_video_device);
@@ -173,7 +205,6 @@ int main(int argc, char **argv)
 	}
 	if(g_enable_filerecordthread == TRUE) {
 		pr_dbg(CYAN"\tFile recording \t\t:\t"GREEN" YES"NONE"\n");
-		pr_dbg(CYAN"\tOutput filename \t:\t"GREEN" %s"NONE"\n",g_filename+19);
 	} else {
 		pr_dbg(CYAN"\tFile recording \t\t:\t"RED" NO"NONE"\n");
 	}
@@ -186,9 +217,38 @@ int main(int argc, char **argv)
 #endif
 
 	while(1) {
-		
-
-
+		cli_addr.sin_family=AF_INET;/* domain family is set to ipv4*/
+		cli_addr.sin_port=htons(SER_PORT);
+		clen=sizeof(ser_addr);
+		memset(userdata,0,30);
+		if((recvfrom(sock_fd,userdata,30,0,(struct sockaddr *)&cli_addr,&clen)) < 0) {
+			perror("recvfrom");
+			exit(0);
+		}
+		memcpy(commandstr,userdata,sizeof(int));
+		command = *((int *)commandstr);
+		memcpy(data,userdata+4,26);
+		switch(command) {
+			case COMMAND_SET_TAKE_SNAPSHOT:
+				value = *((int *)data);
+				g_imagesavetype = value;
+				g_take_snapshot = TRUE;
+				ret = 0;
+				break;
+			case COMMAND_SET_RECORD_VIDEO:
+				value = *((int *)data);
+				g_record_video = value;
+				ret = 0;
+				break;
+		}
+		if(ret == 0) {
+			strcpy(status,"OK");
+		} else if(ret == -1) {
+			strcpy(status,"FAIL");
+		}
+		if((sendto(sock_fd,status,5,0,(const struct sockaddr *)&cli_addr,clen))<0) {
+			perror("sendto");
+		}
 		usleep(10);
 	}
 

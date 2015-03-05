@@ -38,7 +38,7 @@ extern int g_capture_height;
 extern int g_osdflag;
 extern int g_writeflag;
 extern int g_take_snapshot;
-extern int g_jpeg_save;
+extern int g_image_save;
 extern unsigned int g_framesize;
 extern char *g_framebuff[NUM_BUFFER];
 extern int g_enable_osdthread;
@@ -154,14 +154,13 @@ void *captureThread(void)
 			return NULL;
 		}
 		frame_cnt++;
-		if(frame_cnt%15 == 0) g_take_snapshot = 1;
 		memcpy(g_framebuff[i],buffers[buf.index].start,g_framesize);
 		if(g_enable_jpegsavethread) {
 			if(g_take_snapshot) {
 				g_take_snapshot = FALSE;
 				g_jpeg_frame = calloc(g_framesize, 1);
 				memcpy(g_jpeg_frame,g_framebuff[i],g_framesize);
-				g_jpeg_save = TRUE;
+				g_image_save = TRUE;
 			}
 		}
 		if(g_enable_osdthread) {

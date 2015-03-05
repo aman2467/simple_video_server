@@ -16,27 +16,17 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <time.h>
-#include <sys/time.h>
 #include <jpeglib.h>
 #include <common.h>
-
-typedef struct {
-	int hour;
-	int min;
-	int sec;
-	int day;
-	int mon;
-	int year;
-} DATE_TIME;
 
 extern int g_capture_width;
 extern int g_capture_height;
 extern int g_jpeg_quality;
-extern int g_jpeg_save;
+extern int g_image_save;
 extern unsigned int g_framesize;
 extern unsigned char *g_jpeg_frame;
 extern int g_algo_enable;
+extern int g_imagesavetype;
 
 void jpeg(FILE* dest, unsigned char* rgb, unsigned int width, unsigned int height, int quality)
 {
@@ -101,30 +91,31 @@ unsigned char* yuyv2rgb(unsigned char* yuyv, unsigned int width, unsigned int he
 	return rgb;
 }
 
-void getcurrenttime(DATE_TIME *cur)
-{
-	time_t timep;
-	struct tm *p;
-
-	tzset();
-	time(&timep);
-	p=localtime(&timep);
-
-	cur->hour = p->tm_hour;
-	cur->min = p->tm_min;
-	cur->sec = p->tm_sec;
-	cur->year = 1900+p->tm_year;
-	cur->mon = p->tm_mon+1;
-	cur->day = p->tm_mday;
-}
-
-void get_filename(char *filename)
+void get_image_filename(char *name, int val)
 {
 	DATE_TIME current;
 
 	getcurrenttime(&current);
-	snprintf(filename,50,"records/images/jpeg/IMG_%d%d%d_%d%d%d.jpg", current.year, current.mon,
+
+	if(system("mkdir -p records") < 0) {
+		printf("Fail to create 'records' directory\n");
+	}
+	if(system("mkdir -p records/images") < 0) {
+		printf("Fail to create 'records/images' directory\n");
+	}
+	if(val == 0) {
+		snprintf(name,50,"records/images/jpeg/IMG_%d%d%d_%d%d%d.jpg", current.year, current.mon,
 			current.day, current.hour, current.min, current.sec);
+		if(system("mkdir -p records/images/jpeg") < 0) {
+			printf("Fail to create 'records/images/jpeg' directory\n");
+		}
+	} else if(val == 1) {
+		snprintf(name,50,"records/images/raw/IMG_%d%d%d_%d%d%d.raw", current.year, current.mon,
+			current.day, current.hour, current.min, current.sec);
+		if(system("mkdir -p records/images/raw") < 0) {
+			printf("Fail to create 'records/images/raw' directory\n");
+		}
+	}
 }
 
 void *jpegsaveThread()
@@ -134,19 +125,26 @@ void *jpegsaveThread()
 	FILE *fp;
 
 	while(!KillJpegsaveThread) {
-		while(!g_jpeg_save) {
+		while(!g_image_save) {
 			usleep(10);
 		}
 
-		get_filename(outfile);
+		get_image_filename(outfile,g_imagesavetype);
 		fp = fopen(outfile, "w");
-		apply_algo((char *)g_jpeg_frame,g_algo_enable);
-		rgb = yuyv2rgb(g_jpeg_frame, g_capture_width, g_capture_height);
-		jpeg(fp, rgb, g_capture_width, g_capture_height, g_jpeg_quality);
-		free(rgb);
-		free(g_jpeg_frame);
+		switch(g_imagesavetype) {
+			case 0:
+				apply_algo((char *)g_jpeg_frame,g_algo_enable);
+				rgb = yuyv2rgb(g_jpeg_frame, g_capture_width, g_capture_height);
+				jpeg(fp, rgb, g_capture_width, g_capture_height, g_jpeg_quality);
+				free(rgb);
+				free(g_jpeg_frame);
+				break;
+			case 1:
+				fwrite(g_jpeg_frame,g_framesize,1,fp);
+				break;
+		}
 		fclose(fp);
-		g_jpeg_save = FALSE;
+		g_image_save = FALSE;
 	}
 	return 0;
 }

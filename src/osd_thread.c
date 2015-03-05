@@ -36,7 +36,7 @@ void init_OSDWindows()
 		switch(window) {
 			/* Icon Window */
 			case OSD_WINDOW_ZERO:
-				osdwin[window].enable = FALSE;
+				osdwin[window].enable = TRUE;
 				osdwin[window].x = OSD_WINDOW_ZERO_X;
 				osdwin[window].y = OSD_WINDOW_ZERO_Y;
 				osdwin[window].width = OSD_WINDOW_ZERO_W;
@@ -156,7 +156,7 @@ void *osdThread(void)
 	}
 	while(!KillOsdThread) {
 		while(!g_osdflag) {
-			usleep(10);
+			usleep(5);
 		}
 		memcpy(g_osdbuff[i],g_framebuff[i],g_framesize);
 		for(window = 0; window < OSD_MAX_WINDOW; window++) {
@@ -168,7 +168,7 @@ void *osdThread(void)
 				memset(osd_data_ptr,0,osd_size);
 				if(window < OSD_WINDOW_FIVE) {
 					fp = fopen(osdwin[window].file,"rb");
-					if(fread(osd_data_ptr,osd_size,1,fp) < 0) {
+					if(fread(osd_data_ptr,1,osd_size,fp) != osd_size) {
 						return NULL;
 					}
 					fclose(fp);

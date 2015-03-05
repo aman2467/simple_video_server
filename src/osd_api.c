@@ -14,7 +14,7 @@ int osd_init(char *osd)
 
 	fp = fopen("database/ascii.yuyv","rb");
 	if(fp == NULL) printf("fail\n");
-	fread(ascii_data,STRING_WIDTH*TEXT_HEIGHT*BPP,1,fp);
+	if(fread(ascii_data,1,STRING_WIDTH*TEXT_HEIGHT*BPP,fp) != STRING_WIDTH*TEXT_HEIGHT*BPP);
 	fclose(fp);
 	if((ascii_string = calloc(78,1)) == NULL) {
 		printf("Memory not allocated to OSD\n");
