@@ -36,7 +36,7 @@ void init_OSDWindows()
 		switch(window) {
 			/* Icon Window */
 			case OSD_WINDOW_ZERO:
-				osdwin[window].enable = TRUE;
+				osdwin[window].enable = FALSE;
 				osdwin[window].x = OSD_WINDOW_ZERO_X;
 				osdwin[window].y = OSD_WINDOW_ZERO_Y;
 				osdwin[window].width = OSD_WINDOW_ZERO_W;
