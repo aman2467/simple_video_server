@@ -80,7 +80,7 @@ void usage(char *exename)
 	printf(CYAN"\tUsage: "YELLOW"%s "GREEN"<options>"NONE"\n",exename);
 	printf(CYAN"\toptions:\n");
 	printf(GREEN"\t\tosd              "NONE":"YELLOW" To enable OSD\n");
-	printf(GREEN"\t\tfilesave         "NONE":"YELLOW" To enable video save\n");
+	printf(GREEN"\t\tvideosave        "NONE":"YELLOW" To enable video save\n");
 	printf(GREEN"\t\timagesave        "NONE":"YELLOW" To enable snapshot save\n");
 	printf(GREEN"\t\t-d <device>      "NONE":"YELLOW" To capture video from given device\n");
 	printf(GREEN"\t\t-w <width>       "NONE":"YELLOW" Supported capture width\n");
@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 	for(i=1;i<argc;i++) {
 		if (strcmp(argv[i], "osd") == 0) {
 			g_enable_osdthread = TRUE;
-		} else if (strcmp(argv[i], "filesave") == 0) {
+		} else if (strcmp(argv[i], "videosave") == 0) {
 			g_enable_filerecordthread = TRUE;
 		} else if (strcmp(argv[i], "imagesave") == 0) {
 			g_enable_jpegsavethread = TRUE;

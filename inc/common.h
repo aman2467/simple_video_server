@@ -4,7 +4,7 @@
  * @description : This file contains common definitions and declaration for
  *           the application.
  *
- * @author  : Aman Kumar (2014-2015)
+ * @author  : Aman Kumar (2015)
  *
  * @copyright   : The code contained herein is licensed under the GNU General
  *				Public License. You may obtain a copy of the GNU General

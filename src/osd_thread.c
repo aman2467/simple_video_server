@@ -42,7 +42,7 @@ void init_OSDWindows()
 				osdwin[window].width = OSD_WINDOW_ZERO_W;
 				osdwin[window].height = OSD_WINDOW_ZERO_H;
 				osdwin[window].transparency = FALSE;
-				strcpy(osdwin[window].file,"database/win_0.yuyv");
+				strcpy(osdwin[window].file,OSD_DATABASE"/win_0.yuyv");
 				break;
 			case OSD_WINDOW_ONE:
 				osdwin[window].enable = FALSE;
@@ -51,7 +51,7 @@ void init_OSDWindows()
 				osdwin[window].width = OSD_WINDOW_ONE_W;
 				osdwin[window].height = OSD_WINDOW_ONE_H;
 				osdwin[window].transparency = FALSE;
-				strcpy(osdwin[window].file,"database/win_1.yuyv");
+				strcpy(osdwin[window].file,OSD_DATABASE"/win_1.yuyv");
 				break;
 			case OSD_WINDOW_TWO:
 				osdwin[window].enable = FALSE;
@@ -60,7 +60,7 @@ void init_OSDWindows()
 				osdwin[window].width = OSD_WINDOW_TWO_W;
 				osdwin[window].height = OSD_WINDOW_TWO_H;
 				osdwin[window].transparency = FALSE;
-				strcpy(osdwin[window].file,"database/win_2.yuyv");
+				strcpy(osdwin[window].file,OSD_DATABASE"/win_2.yuyv");
 				break;
 			case OSD_WINDOW_THREE:
 				osdwin[window].enable = FALSE;
@@ -69,7 +69,7 @@ void init_OSDWindows()
 				osdwin[window].width = OSD_WINDOW_THREE_W;
 				osdwin[window].height = OSD_WINDOW_THREE_H;
 				osdwin[window].transparency = FALSE;
-				strcpy(osdwin[window].file,"database/win_3.yuyv");
+				strcpy(osdwin[window].file,OSD_DATABASE"/win_3.yuyv");
 				break;
 			case OSD_WINDOW_FOUR:
 				osdwin[window].enable = FALSE;
@@ -78,7 +78,7 @@ void init_OSDWindows()
 				osdwin[window].width = OSD_WINDOW_FOUR_W;
 				osdwin[window].height = OSD_WINDOW_FOUR_H;
 				osdwin[window].transparency = FALSE;
-				strcpy(osdwin[window].file,"database/win_4.yuyv");
+				strcpy(osdwin[window].file,OSD_DATABASE"/win_4.yuyv");
 				break;
 			/* Text Window */
 			case OSD_WINDOW_FIVE:

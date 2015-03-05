@@ -24,6 +24,7 @@ YELLOW=\033[01;33m
 CYAN=\033[01;36m
 SRC_DIR =$(BASEDIR)/src
 INTERFACE_DIR=$(BASEDIR)/interface/src
+DATABASE_DIR=${BASEDIR}/database
 BIN_DIR=$(BASEDIR)/bin
 LIB_DIR=$(BASEDIR)/lib
 UTILS_DIR=$(BASEDIR)/tools
@@ -44,6 +45,7 @@ CPPFLAGS += -I. \
 all: video_server utils cli_app print
 
 video_server:
+	${VERBOSE} sed -i "s,PATH,$(DATABASE_DIR),g"  $(BASEDIR)/inc/osd_thread.h
 	${VERBOSE} ${CC} ${SRC_DIR}/*.c ${CFLAGS} ${CPPFLAGS} ${LD_FLAGS} -o ${RELTARGET}
 
 utils:
@@ -57,7 +59,6 @@ clean:
 	${VERBOSE}echo "All Binaries ${RED}removed${NONE}"
 
 print:
-	${VERBOSE}echo " "
 	${VERBOSE}echo "                                         ${YELLOW}<<#|#>> "
 	${VERBOSE}echo "                                         -(${RED}o o${YELLOW})-${NONE}"
 	${VERBOSE}echo "${CYAN}======================================${YELLOW}oOO${CYAN}==${YELLOW}(${RED}^${YELLOW})${CYAN}==${YELLOW}OOo${CYAN}=====================================${NONE}"
@@ -67,6 +68,7 @@ print:
 	${VERBOSE}echo "${YELLOW}Binaries :"
 	${VERBOSE}echo "        ${GREEN}1. ${TARGET}${NONE}"
 	${VERBOSE}echo "        ${GREEN}2. cli_app${NONE}"
+	${VERBOSE}echo "        ${GREEN}3. uyvy2yuyv${NONE}"
 	${VERBOSE}echo " "
 	${VERBOSE}echo "${CYAN}========================================================================================"
 	${VERBOSE}echo " "

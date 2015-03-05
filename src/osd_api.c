@@ -11,8 +11,11 @@ extern char *ascii_string;
 int osd_init(char *osd)
 {
 	FILE *fp;
+	char filename[100]={0};
 
-	fp = fopen("database/ascii.yuyv","rb");
+	strcpy(filename,OSD_DATABASE);
+	strcat(filename,"/ascii.yuyv");
+	fp = fopen(filename,"rb");
 	if(fp == NULL) printf("fail\n");
 	if(fread(ascii_data,1,STRING_WIDTH*TEXT_HEIGHT*BPP,fp) != STRING_WIDTH*TEXT_HEIGHT*BPP);
 	fclose(fp);

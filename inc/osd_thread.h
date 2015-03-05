@@ -4,7 +4,7 @@
  * @description : This file contains common definitions and declaration for
  *           osd thread.
  *
- * @author  : Aman Kumar (2014-2015)
+ * @author  : Aman Kumar (2015)
  *
  * @copyright   : The code contained herein is licensed under the GNU General
  *				Public License. You may obtain a copy of the GNU General
@@ -27,6 +27,7 @@
 #define OSD_WINDOW_EIGHT 8
 #define OSD_WINDOW_NINE 9
 
+#define OSD_DATABASE "PATH"
 #define OSD_TEXT_MAX_LENGTH 20
 #define TEXT_WIDTH 10
 #define TEXT_HEIGHT 16
