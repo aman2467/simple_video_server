@@ -32,11 +32,19 @@ void CommandLineInterpreter(void);
 
 void CmndTakeSnap(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndRecordVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndSetAlgoType(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndOsdWinEnable(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndOsdOnImage(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndOsdOnVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndHelp(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndExit(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 
 int sendCommand(int, char *);
-int savesnap(int);
+int takesnap(int);
 int recordvideo(int);
+int setalgotype(int);
+int osdwinenable(int, int);
+int osdonimage(int);
+int osdonvideo(int);
 
 #endif

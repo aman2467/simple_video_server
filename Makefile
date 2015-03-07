@@ -42,7 +42,7 @@ CPPFLAGS += -I. \
 
 .PHONY: clean app utils video_server
 
-all: video_server utils cli_app print
+all: video_server utils cli_app info
 
 video_server:
 	${VERBOSE} sed -i "s,PATH,$(DATABASE_DIR),g"  $(BASEDIR)/inc/osd_thread.h
@@ -58,7 +58,7 @@ clean:
 	${VERBOSE}rm -f $(BIN_DIR)/*
 	${VERBOSE}echo "All Binaries ${RED}removed${NONE}"
 
-print:
+info:
 	${VERBOSE}echo "                                         ${YELLOW}<<#|#>> "
 	${VERBOSE}echo "                                         -(${RED}o o${YELLOW})-${NONE}"
 	${VERBOSE}echo "${CYAN}======================================${YELLOW}oOO${CYAN}==${YELLOW}(${RED}^${YELLOW})${CYAN}==${YELLOW}OOo${CYAN}=====================================${NONE}"

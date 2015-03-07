@@ -29,36 +29,15 @@
 #include <command_list.h>
 #include <osd_thread.h>
 
-int	g_enable_osdthread;
-int	g_enable_jpegsavethread;
-int	g_enable_filerecordthread;
-
-int g_videosavetype = 0;
-int g_imagesavetype = 0;
-char g_video_device[30]="/dev/video0";
-int g_capture_width = 848;
-int g_capture_height = 480;
-
 int g_writeflag = 0;
 int g_osdflag = 0;
 
-unsigned int g_framesize = 0;
-unsigned char *g_jpeg_frame;
-int g_jpeg_quality = 100;
-int g_image_save;
-
-int g_algo_bw = 0;
-int g_algo_cartoon = 0;
-int g_algo_enable = 0;
-
-int g_take_snapshot;
-int g_record_video;
-
 char *g_framebuff[NUM_BUFFER] = {NULL};
 char *g_osdbuff[NUM_BUFFER] = {NULL};
+
 char *ascii_string;
-struct osdwindow osdwin[OSD_MAX_WINDOW];
 char ascii_data[STRING_WIDTH*TEXT_HEIGHT*TEXT_WIDTH*BPP];
+
 int current_task;
 SERVER_CONFIG g_server_config;
 
@@ -67,11 +46,23 @@ extern void *filerecordThread(void *);
 extern void *osdThread(void *);
 extern void *jpegsaveThread(void *);
 
+
+/****************************************************************************
+ * @usage : This function returns pointer global configuration structure.
+ *
+ * @arg  : void
+ * @return     : pointer to global SERVER_CONFIG structure
+ * *************************************************************************/
+SERVER_CONFIG *GetServerConfig(void)
+{
+	return (&g_server_config);
+}
+
 /****************************************************************************
  * @usage : This function prints the usage and help menu.
  *
  * @arg  : char pointer to the first entered argument from command line
- * @return value     : void
+ * @return     : void
  * *************************************************************************/
 void usage(char *exename)
 {
@@ -90,11 +81,47 @@ void usage(char *exename)
 }
 
 /****************************************************************************
+ * @usage : This is function to initialize Server configurations.
+ *
+ * @arg  : pointer to global server configuration structure
+ * @return     : void
+ * *************************************************************************/
+void Init_Server(SERVER_CONFIG *serverConfig)
+{
+/* threads settings */
+	serverConfig->enable_osd_thread = FALSE;
+	serverConfig->enable_imagesave_thread = FALSE;
+	serverConfig->enable_videosave_thread = FALSE;
+	serverConfig->enable_network_thread = FALSE;
+/* algorithm settings */
+	serverConfig->algo_type = ALGO_NONE;
+/* JPEG Param settings */
+	serverConfig->jpeg.quality = 100;
+	serverConfig->jpeg.framebuff = NULL;
+/* Capture settings */
+	strcpy(serverConfig->capture.device,"/dev/video0");
+	serverConfig->capture.width = 848;
+	serverConfig->capture.height = 480;
+	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
+/* network settings */
+	serverConfig->nw.port = SER_PORT;
+	strcpy(serverConfig->nw.ip,"127.0.0.1");
+/* video record settings */
+	serverConfig->video.recordenable = FALSE;
+	serverConfig->video.osd_on = TRUE;
+	serverConfig->video.type = TYPE_NONE;
+/* image record settings */
+	serverConfig->image.recordenable = FALSE;
+	serverConfig->image.osd_on = TRUE;
+	serverConfig->image.type = TYPE_NONE;
+}
+
+/****************************************************************************
  * @main : This is the main function of the application. It creates separate
  *          threads for receive packets and save video data to file.
  *
  * @arg  : command line arguments
- * @return value     : 0
+ * @return     : 0
  * *************************************************************************/
 int main(int argc, char **argv)
 {
@@ -102,45 +129,46 @@ int main(int argc, char **argv)
 	pthread_t tCaptureThread, tOsdThread, tFilerecordThread, tJpegsaveThread;
 	int i;
 	int command;
-	int value;
+	int arg1, arg2;
 	int ret = 0;
 	char commandstr[4];
-	char status[5]={0};
+	char status[10]={0};
 	char userdata[30];
 	char data[26];
 	int sock_fd;
 	socklen_t slen,clen;
 	struct sockaddr_in ser_addr,cli_addr;
-
-	g_enable_osdthread = FALSE;
-	g_enable_filerecordthread = FALSE;
+	SERVER_CONFIG *serverConfig = GetServerConfig();
 
 	if((argc==2 && strcmp(argv[1],"-h")==0)) {
 		usage(argv[0]);
 	}
 
+	Init_Server(serverConfig);
+
 	for(i=1;i<argc;i++) {
 		if (strcmp(argv[i], "osd") == 0) {
-			g_enable_osdthread = TRUE;
+			serverConfig->enable_osd_thread = TRUE;
 		} else if (strcmp(argv[i], "videosave") == 0) {
-			g_enable_filerecordthread = TRUE;
+			serverConfig->enable_videosave_thread = TRUE;
 		} else if (strcmp(argv[i], "imagesave") == 0) {
-			g_enable_jpegsavethread = TRUE;
+			serverConfig->enable_imagesave_thread = TRUE;
 		} else if (strcmp(argv[i], "-d") == 0) {
-			strcpy(g_video_device,argv[++i]);
+			strcpy(serverConfig->capture.device,argv[++i]);
 		} else if (strcmp(argv[i], "-w") == 0) {
-			g_capture_width = atoi(argv[++i]);
+			serverConfig->capture.width = atoi(argv[++i]);
 		} else if (strcmp(argv[i], "-h") == 0) {
-			g_capture_height = atoi(argv[++i]);
+			serverConfig->capture.height = atoi(argv[++i]);
 		}
 	}
-	g_framesize = g_capture_width*g_capture_height*2;
+
+	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
 	for(i = 0; i < NUM_BUFFER ;i++) {
-		g_framebuff[i] = (char *)calloc(1,g_framesize);
-		memset(g_framebuff[i],0,g_framesize);
-		if(g_enable_osdthread) {
-			g_osdbuff[i] = (char *)calloc(1,g_framesize);
-			memset(g_framebuff[i],0,g_framesize);
+		g_framebuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
+		memset(g_framebuff[i],0,serverConfig->capture.framesize);
+		if(serverConfig->enable_osd_thread) {
+			g_osdbuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
+			memset(g_framebuff[i],0,serverConfig->capture.framesize);
 		}
 	}
 
@@ -152,7 +180,7 @@ int main(int argc, char **argv)
 	pr_dbg("Capture Thread created\n");
 	threadStatus |= CAPTURE_THR;
 
-	if(g_enable_osdthread == TRUE) {
+	if(serverConfig->enable_osd_thread == TRUE) {
 		KillOsdThread = 0;
 		if(pthread_create(&tOsdThread, NULL, osdThread, NULL)) {
 			perror("OSD Thread create fail\n");
@@ -162,7 +190,7 @@ int main(int argc, char **argv)
 		threadStatus |= OSD_THR;
 	}
 
-	if(g_enable_filerecordthread == TRUE) {
+	if(serverConfig->enable_videosave_thread == TRUE) {
 		KillFilerecordThread = 0;
 		if(pthread_create(&tFilerecordThread, NULL, filerecordThread, NULL)) {
 			perror("File Record Thread create fail\n");
@@ -172,7 +200,7 @@ int main(int argc, char **argv)
 		threadStatus |= FILERECORD_THR;
 	}
 
-	if(g_enable_jpegsavethread == TRUE) {
+	if(serverConfig->enable_imagesave_thread == TRUE) {
 		KillJpegsaveThread = 0;
 		if(pthread_create(&tJpegsaveThread, NULL, jpegsaveThread, NULL)) {
 			perror("JPEG Save Thread create fail\n");
@@ -189,26 +217,29 @@ int main(int argc, char **argv)
 	ser_addr.sin_port=htons(SER_PORT);
 	ser_addr.sin_addr.s_addr=inet_addr("0.0.0.0");
 	slen=sizeof(ser_addr);
+	cli_addr.sin_family=AF_INET;/* domain family is set to ipv4*/
+	cli_addr.sin_port=htons(SER_PORT);
+	clen=sizeof(cli_addr);
 	if(bind(sock_fd,(const struct sockaddr *)&ser_addr,slen)<0) {
 		perror("bind");
 		exit(0);
 	}
 #ifdef _DEBUG
 	pr_dbg(YELLOW"/************************************************************/"NONE"\n");
-	pr_dbg(CYAN"\tCapture Device \t\t:\t"GREEN" %s"NONE"\n", g_video_device);
-	pr_dbg(CYAN"\tCapture resolution \t:\t"GREEN" %d x %d"NONE"\n",g_capture_width,
-															g_capture_height);
-	if(g_enable_osdthread == TRUE) {
+	pr_dbg(CYAN"\tCapture Device \t\t:\t"GREEN" %s"NONE"\n", serverConfig->capture.device);
+	pr_dbg(CYAN"\tCapture resolution \t:\t"GREEN" %d x %d"NONE"\n",serverConfig->capture.width,
+															serverConfig->capture.height);
+	if(serverConfig->enable_osd_thread == TRUE) {
 		pr_dbg(CYAN"\tOSD \t\t\t:\t"GREEN" YES"NONE"\n");
 	} else {
 		pr_dbg(CYAN"\tOSD \t\t\t:\t"RED" NO"NONE"\n");
 	}
-	if(g_enable_filerecordthread == TRUE) {
+	if(serverConfig->enable_videosave_thread == TRUE) {
 		pr_dbg(CYAN"\tFile recording \t\t:\t"GREEN" YES"NONE"\n");
 	} else {
 		pr_dbg(CYAN"\tFile recording \t\t:\t"RED" NO"NONE"\n");
 	}
-	if(g_enable_jpegsavethread == TRUE) {
+	if(serverConfig->enable_imagesave_thread == TRUE) {
 		pr_dbg(CYAN"\tJPEG save \t\t:\t"GREEN" YES"NONE"\n");
 	} else {
 		pr_dbg(CYAN"\tJPEG save \t\t:\t"RED" NO"NONE"\n");
@@ -217,9 +248,6 @@ int main(int argc, char **argv)
 #endif
 
 	while(1) {
-		cli_addr.sin_family=AF_INET;/* domain family is set to ipv4*/
-		cli_addr.sin_port=htons(SER_PORT);
-		clen=sizeof(ser_addr);
 		memset(userdata,0,30);
 		if((recvfrom(sock_fd,userdata,30,0,(struct sockaddr *)&cli_addr,&clen)) < 0) {
 			perror("recvfrom");
@@ -230,41 +258,96 @@ int main(int argc, char **argv)
 		memcpy(data,userdata+4,26);
 		switch(command) {
 			case COMMAND_SET_TAKE_SNAPSHOT:
-				value = *((int *)data);
-				g_imagesavetype = value;
-				g_take_snapshot = TRUE;
-				ret = 0;
+				arg1 = *((int *)data);
+				if(serverConfig->enable_imagesave_thread) {
+					serverConfig->image.type = arg1;
+					serverConfig->image.recordenable = TRUE;
+					ret = 0;
+				} else {
+					ret = 1;
+				}
 				break;
 			case COMMAND_SET_RECORD_VIDEO:
-				value = *((int *)data);
-				g_record_video = value;
+				arg1 = *((int *)data);
+				if(serverConfig->enable_videosave_thread) {
+					serverConfig->video.recordenable = arg1;
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			case COMMAND_SET_VIDEO_TYPE:
+				arg1 = *((int *)data);
+				if(serverConfig->enable_videosave_thread || serverConfig->enable_network_thread) {
+					serverConfig->video.type = arg1;
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			case COMMAND_SET_ALGO_TYPE:
+				arg1 = *((int *)data);
+				serverConfig->algo_type = arg1;
 				ret = 0;
+				break;
+			case COMMAND_SET_OSD_ENABLE:
+				arg1 = *((int *)data);
+				arg2 = *((int *)(data+4));
+				if(serverConfig->enable_osd_thread) {
+					set_osd_window_enable(arg1, arg2);
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			case COMMAND_SET_OSD_ON_IMAGE:
+				arg1 = *((int *)data);
+				if(serverConfig->enable_osd_thread && serverConfig->enable_imagesave_thread) {
+					serverConfig->image.osd_on = arg1;
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			case COMMAND_SET_OSD_ON_VIDEO:
+				arg1 = *((int *)data);
+				if(serverConfig->enable_osd_thread && serverConfig->enable_videosave_thread) {
+					serverConfig->video.osd_on = arg1;
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			default:
+				ret = -1;
 				break;
 		}
 		if(ret == 0) {
 			strcpy(status,"OK");
 		} else if(ret == -1) {
 			strcpy(status,"FAIL");
+		} else if(ret == 1) {
+			strcpy(status,"UNKNOWN");
 		}
-		if((sendto(sock_fd,status,5,0,(const struct sockaddr *)&cli_addr,clen))<0) {
+		if((sendto(sock_fd,status,10,0,(const struct sockaddr *)&cli_addr,clen))<0) {
 			perror("sendto");
 		}
 		usleep(10);
 	}
 
-	if(g_enable_jpegsavethread == TRUE) {
+	if(serverConfig->enable_imagesave_thread == TRUE) {
 		if(threadStatus & JPEGSAVE_THR){
 			KillJpegsaveThread = 1;
 			pthread_join(tJpegsaveThread, NULL);
 		}
 	}
-	if(g_enable_filerecordthread == TRUE) {
+	if(serverConfig->enable_videosave_thread == TRUE) {
 		if(threadStatus & FILERECORD_THR){
 			KillFilerecordThread = 1;
 			pthread_join(tFilerecordThread, NULL);
 		}
 	}
-	if(g_enable_osdthread == TRUE) {
+	if(serverConfig->enable_osd_thread == TRUE) {
 		if (threadStatus & OSD_THR) {
 			KillOsdThread = 1;
 			pthread_join(tOsdThread, NULL);

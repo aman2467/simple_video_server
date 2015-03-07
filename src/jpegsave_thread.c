@@ -19,15 +19,6 @@
 #include <jpeglib.h>
 #include <common.h>
 
-extern int g_capture_width;
-extern int g_capture_height;
-extern int g_jpeg_quality;
-extern int g_image_save;
-extern unsigned int g_framesize;
-extern unsigned char *g_jpeg_frame;
-extern int g_algo_enable;
-extern int g_imagesavetype;
-
 void jpeg(FILE* dest, unsigned char* rgb, unsigned int width, unsigned int height, int quality)
 {
 	size_t i, j;
@@ -123,28 +114,29 @@ void *jpegsaveThread()
 	unsigned char* rgb;
 	char outfile[50] = {0};
 	FILE *fp;
+	SERVER_CONFIG *serverConfig = GetServerConfig();
 
 	while(!KillJpegsaveThread) {
-		while(!g_image_save) {
+		while(serverConfig->jpeg.framebuff == NULL) {
 			usleep(10);
 		}
 
-		get_image_filename(outfile,g_imagesavetype);
+		get_image_filename(outfile,serverConfig->image.type);
 		fp = fopen(outfile, "w");
-		switch(g_imagesavetype) {
+		switch(serverConfig->image.type) {
 			case 0:
-				apply_algo((char *)g_jpeg_frame,g_algo_enable);
-				rgb = yuyv2rgb(g_jpeg_frame, g_capture_width, g_capture_height);
-				jpeg(fp, rgb, g_capture_width, g_capture_height, g_jpeg_quality);
+				apply_algo((char *)serverConfig->jpeg.framebuff,serverConfig->algo_type);
+				rgb = yuyv2rgb(serverConfig->jpeg.framebuff, serverConfig->capture.width, serverConfig->capture.height);
+				jpeg(fp, rgb, serverConfig->capture.width, serverConfig->capture.height, serverConfig->jpeg.quality);
 				free(rgb);
-				free(g_jpeg_frame);
+				free(serverConfig->jpeg.framebuff);
+				serverConfig->jpeg.framebuff = NULL;
 				break;
 			case 1:
-				fwrite(g_jpeg_frame,g_framesize,1,fp);
+				fwrite(serverConfig->jpeg.framebuff,serverConfig->capture.framesize,1,fp);
 				break;
 		}
 		fclose(fp);
-		g_image_save = FALSE;
 	}
 	return 0;
 }

@@ -37,6 +37,10 @@ const  struct  CmndTableEntry_t  asCommand[] = {
 	/*  Name				Attribute       Address   */
 	{"takesnap",			USER_CMD,		CmndTakeSnap},	
 	{"recordvideo",			USER_CMD,		CmndRecordVideo},	
+	{"setalgotype",			USER_CMD,		CmndSetAlgoType},	
+	{"osdwinenable",		USER_CMD,		CmndOsdWinEnable},	
+	{"osdonimage",			USER_CMD,		CmndOsdOnImage},	
+	{"osdonvideo",			USER_CMD,		CmndOsdOnVideo},	
 	{"help",				USER_CMD,		CmndHelp},
 	{"exit",				USER_CMD,		CmndExit},
 	{"$",					DEBUG_CMD,      NULL},   /* Dummy last entry */
@@ -208,28 +212,33 @@ void CmndExit(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
  * ********************************************************************/
 void CmndTakeSnap(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
 {
-	int val;
+	int type;
 	if (uwCmndArgCount == 2) {
-		val=atoi(apcCmndArgVal[1]);
-		if(val == 0 || val == 1) {
-			if(savesnap(val) < 0) {
-				printf("\nCommand takesnap failed\n");
-			}
-			return;
+		type = atoi(apcCmndArgVal[1]);
+		if(strcmp("jpeg",apcCmndArgVal[1]) == 0) {
+			type = 0;
+		} else if(strcmp("raw",apcCmndArgVal[1]) == 0) {
+			type = 1;
 		} else {
-			printf("\nEnter appropriate argument.\n");
+			printf("\nEnter appropriate argument\n");
+			goto usage;
 		}
+		if(takesnap(type) < 0) {
+			printf("\nCommand takesnap failed\n");
+		}
+		return;
 	}
 
-	printf("\nUsage: takesnap <0/1>\n");
-	printf("Arg's:\t0 -> JPEG Snapshot\n");
-	printf("\t1 -> Raw Snapshot\n");
+usage:
+	printf("\nUsage: takesnap <jpeg|raw>\n");
+	printf("Arg's:\tjpeg -> JPEG Snapshot\n");
+	printf("\traw -> Raw Snapshot\n");
 	return;
 }
 
 /**********************************************************************
  * CmndRecordVideo :  This function is called when a Command 'recordvideo' 
- *			  is typed in the CLI prompt. It saves a snapshot.
+ *			  is typed in the CLI prompt. It saves a video.
  *
  * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
  * @*apcCmndArgVal[] : Array of pointers to Command Line args
@@ -254,12 +263,143 @@ void CmndRecordVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
 	}
 
 usage:
-	printf("\nUsage: recordvideo <start/stop>\n");
+	printf("\nUsage: recordvideo <start|stop>\n");
 	printf("Arg's:\tstart -> To start a recording\n");
 	printf("\tstop -> To stop a recording\n");
 	return;
 }
 
+/**********************************************************************
+ * CmndSetAlgoType :  This function is called when a Command 'setalgotype' 
+ *			  is typed in the CLI prompt. It sets algo type.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndSetAlgoType(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int type;
+	if (uwCmndArgCount == 2) {
+		if(strcmp("none",apcCmndArgVal[1]) == 0) {
+			type = 0;
+		} else if(strcmp("bw",apcCmndArgVal[1]) == 0) {
+			type = 1;
+		} else if(strcmp("cartoon",apcCmndArgVal[1]) == 0) {
+			type = 2;
+		} else {
+			printf("\nEnter appropriate argument\n");
+			goto usage;
+		}
+		if(setalgotype(type) < 0) {
+			printf("\nCommand setalgotype failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: setalgotype <none|bw|cartoon>\n");
+	printf("Arg's:\tnone -> To get normal video/image\n");
+	printf("\tbw -> To get black&white video/image\n");
+	printf("\tcartoon -> To get cartoonised video/image\n");
+	return;
+}
+
+/**********************************************************************
+ * CmndOsdWinEnable :  This function is called when a Command 'osdwinenable' 
+ *			  is typed in the CLI prompt. It enables/disables osd windows.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndOsdWinEnable(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int win,enable;
+	if (uwCmndArgCount == 3) {
+		win = atoi(apcCmndArgVal[1]);
+		if(win < 0 || win > 9) {
+			printf("\nInvalid OSD Window number\n");
+			goto usage;
+		}
+		if(strcmp("enable",apcCmndArgVal[2]) == 0) {
+			enable = 1;
+		} else if(strcmp("disable",apcCmndArgVal[2]) == 0) {
+			enable = 0;
+		}
+		if(osdwinenable(win,enable) < 0) {
+			printf("\nCommand osdwinenable failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: osdwinenable <OSD window no.> <enable|disable>\n");
+	printf("Arg's:\t1. OSD window no -> OSD window between 0 to 9\n");
+	printf("\t2. enable -> To enable given OSD Window\n");
+	printf("\t   disble -> To disable given OSD Window\n");
+	return;
+}
+
+/**********************************************************************
+ * CmndOsdOnImage :  This function is called when a Command 'osdonimage' 
+ *			  is typed in the CLI prompt. It enables/disables OSD on saved snapshot.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndOsdOnImage(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int enable;
+	if (uwCmndArgCount == 2) {
+		if(strcmp("enable",apcCmndArgVal[2]) == 0) {
+			enable = 1;
+		} else if(strcmp("disable",apcCmndArgVal[2]) == 0) {
+			enable = 0;
+		}
+		if(osdonimage(enable) < 0) {
+			printf("\nCommand osdonimage failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: osdonimage <enable|disable>\n");
+	printf("Arg's:\tenable -> To enable OSD on recorded snapshot\n");
+	printf("\tdisble -> To disable OSD on recorded snapshot\n");
+	return;
+}
+
+/**********************************************************************
+ * CmndOsdOnVideo :  This function is called when a Command 'osdonvideo'
+ *            is typed in the CLI prompt. It enables/disables OSD on saved video.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndOsdOnVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int enable;
+		if (uwCmndArgCount == 2) {
+			if(strcmp("enable",apcCmndArgVal[2]) == 0) {
+				enable = 1;
+			} else if(strcmp("disable",apcCmndArgVal[2]) == 0) {
+				enable = 0;
+			}
+			if(osdonvideo(enable) < 0) {
+				printf("\nCommand osdonvideo failed\n");
+			}
+			return;
+		}
+
+usage:
+	printf("\nUsage: osdonvideo <enable|disable>\n");
+	printf("Arg's:\tenable -> To enable OSD on recorded video\n");
+	printf("\tdisble -> To disable OSD on recorded video\n");
+	return;
+}
 
 /*******************************************
  * Main function for Command Line Interface

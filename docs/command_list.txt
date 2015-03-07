@@ -4,11 +4,29 @@
 
 # Command List :
 
-	1. takesnap <0/1>
-		0 -> Will save a JPEG snapshot
-		1 -> Will save a Raw frame
+	1. takesnap <jpeg|raw>
+		jpeg -> Will save a JPEG snapshot
+		raw -> Will save a Raw frame
 
 	2. recordvideo <start/stop>
 		start -> starts recording video
 		stop  -> stops recording video
-		
+
+	3. setalgotype <none|bw|cartoon>
+		none -> to disable algo
+		bw -> to get black&white image/video
+		cartoon -> to get cartoonised image/video
+
+	4. osdwinenable <OSD window number> <enable|disable>
+		i. OSD window number -> valid OSD number (0~9)
+		ii. enable -> to enable entered OSD window
+		    disable -> to disable entered window
+
+	5. osdonimage <enable|disable>
+		enable - > to enable osd on image to be saved
+		disable - > to disble osd on image to be saved
+	
+	6. osdonvideo <enable|disable>
+		enable - > to enable osd on video to be saved
+		disable - > to disble osd on video to be saved
+

@@ -20,12 +20,7 @@
 
 extern char *g_framebuff[NUM_BUFFER];
 extern char *g_osdbuff[NUM_BUFFER];
-extern unsigned int g_framesize;
 extern int g_writeflag;
-extern int g_enable_osdthread;
-extern int g_algo_enable;
-extern int g_videosavetype;
-extern int g_record_video;
 
 
 void get_video_filename(char *name, int val)
@@ -60,28 +55,29 @@ void *filerecordThread(void)
 	FILE *fp;
 	char filename[50];
 
+	SERVER_CONFIG *serverConfig = GetServerConfig();
 
 	while(!KillFilerecordThread) {
 		while(!g_writeflag) {
 			usleep(5);
 		}
-		if(g_record_video == TRUE) {
-			get_video_filename(filename,g_videosavetype);
+		if(serverConfig->video.recordenable == TRUE) {
+			get_video_filename(filename,serverConfig->video.type);
 			if((fp = fopen(filename,"w")) == NULL) {
 				perror("FOPEN");
 				return NULL;
 			}
-			while(g_record_video == TRUE) {
+			while(serverConfig->video.recordenable == TRUE) {
 				while(!g_writeflag) usleep(1);
-				if(g_enable_osdthread == TRUE) {
-					apply_algo(g_osdbuff[i],g_algo_enable);
-					if(fwrite(g_osdbuff[i],g_framesize, 1, fp) < 0) {
+				if(serverConfig->enable_osd_thread == TRUE) {
+					apply_algo(g_osdbuff[i],serverConfig->algo_type);
+					if(fwrite(g_osdbuff[i],serverConfig->capture.framesize, 1, fp) < 0) {
 						perror("WRITE");
 						continue;
 					}
 				} else {
-					apply_algo(g_framebuff[i],g_algo_enable);
-					if(fwrite(g_framebuff[i],g_framesize, 1, fp) < 0) {
+					apply_algo(g_framebuff[i],serverConfig->algo_type);
+					if(fwrite(g_framebuff[i],serverConfig->capture.framesize, 1, fp) < 0) {
 						perror("WRITE");
 						continue;
 					}

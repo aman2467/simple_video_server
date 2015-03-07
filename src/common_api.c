@@ -3,10 +3,6 @@
 #include <sys/time.h>
 #include <common.h>
 
-extern unsigned int g_framesize;
-extern int g_algo_bw;
-extern int g_algo_thermal;
-
 void getcurrenttime(DATE_TIME *cur)
 {
 	time_t timep;
@@ -22,6 +18,13 @@ void getcurrenttime(DATE_TIME *cur)
 	cur->year = 1900+p->tm_year;
 	cur->mon = p->tm_mon+1;
 	cur->day = p->tm_mday;
+}
+
+void set_osd_window_enable(int window, int enable)
+{
+	SERVER_CONFIG *serverConfig = GetServerConfig();
+
+	serverConfig->osdwin[window].enable = enable;
 }
 
 void update_osd_window(int window)

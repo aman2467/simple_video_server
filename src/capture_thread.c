@@ -31,19 +31,9 @@ struct capturebuffer {
 	unsigned int length;
 };
 
-extern char g_video_device[30];
-extern char *g_jpeg_frame;
-extern int g_capture_width;
-extern int g_capture_height;
 extern int g_osdflag;
 extern int g_writeflag;
-extern int g_take_snapshot;
-extern int g_image_save;
-extern unsigned int g_framesize;
 extern char *g_framebuff[NUM_BUFFER];
-extern int g_enable_osdthread;
-extern int g_enable_filerecordthread;
-extern int g_enable_jpegsavethread;
 extern int current_task;
 
 void *captureThread(void)
@@ -60,7 +50,9 @@ void *captureThread(void)
 	struct v4l2_buffer buf;
 	struct capturebuffer buffers[NUM_BUFFER];
 
-	if((fd = open(g_video_device, O_RDWR, 0)) < 0) {
+	SERVER_CONFIG *serverConfig = GetServerConfig();
+
+	if((fd = open(serverConfig->capture.device, O_RDWR, 0)) < 0) {
 		perror("video device open");
 		return NULL;
 	}
@@ -89,8 +81,8 @@ void *captureThread(void)
 
 	memset(&fmt, 0, sizeof(fmt));
 	fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	fmt.fmt.pix.width = g_capture_width;
-	fmt.fmt.pix.height = g_capture_height;
+	fmt.fmt.pix.width = serverConfig->capture.width;
+	fmt.fmt.pix.height = serverConfig->capture.height;
 	fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
 	fmt.fmt.pix.field = V4L2_FIELD_NONE;
 	if (ioctl(fd, VIDIOC_S_FMT, &fmt) == FAIL) {
@@ -154,19 +146,18 @@ void *captureThread(void)
 			return NULL;
 		}
 		frame_cnt++;
-		memcpy(g_framebuff[i],buffers[buf.index].start,g_framesize);
-		if(g_enable_jpegsavethread) {
-			if(g_take_snapshot) {
-				g_take_snapshot = FALSE;
-				g_jpeg_frame = calloc(g_framesize, 1);
-				memcpy(g_jpeg_frame,g_framebuff[i],g_framesize);
-				g_image_save = TRUE;
+		memcpy(g_framebuff[i],buffers[buf.index].start,serverConfig->capture.framesize);
+		if(serverConfig->enable_imagesave_thread && !serverConfig->image.osd_on) {
+			if(serverConfig->image.recordenable) {
+				serverConfig->image.recordenable = FALSE;
+				serverConfig->jpeg.framebuff = calloc(serverConfig->capture.framesize, 1);
+				memcpy(serverConfig->jpeg.framebuff,g_framebuff[i],serverConfig->capture.framesize);
 			}
 		}
-		if(g_enable_osdthread) {
+		if(serverConfig->enable_osd_thread) {
 			g_osdflag = 1;
 		//	current_task = TASK_FOR_OSD;
-		} else if(g_enable_filerecordthread) {
+		} else if(serverConfig->enable_videosave_thread) {
 			g_writeflag = 1;
 		//	current_task = TASK_FOR_FILERECORD;
 		}
