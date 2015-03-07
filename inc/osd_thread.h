@@ -28,7 +28,6 @@
 #define OSD_WINDOW_NINE 9
 
 #define OSD_DATABASE "PATH"
-#define OSD_TEXT_MAX_LENGTH 20
 #define TEXT_WIDTH 10
 #define TEXT_HEIGHT 16
 #define STRING_WIDTH 770
@@ -96,17 +95,6 @@
 #define OSD_WINDOW_NINE_H TEXT_HEIGHT
 
 #define ASCII_STRING "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:; '/\\+-_()&$#,"
-
-struct osdwindow {
-	int enable;
-	int x;
-	int y;
-	int width;
-	int height;
-	int transparency;
-	char osdtext[OSD_TEXT_MAX_LENGTH];
-	char file[80];
-};
 
 int osd_init(char *);
 void fill_osd_data(char *,char *, int, int);

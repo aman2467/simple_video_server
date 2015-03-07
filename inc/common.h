@@ -22,6 +22,7 @@
 #define _DEBUG
 #define NUM_BUFFER 10
 #define OSD_MAX_WINDOW 10
+#define OSD_TEXT_MAX_LENGTH 20 
 #define BPP 2
 #define SER_PORT 2467
 
@@ -62,6 +63,18 @@
 #define NONE " "
 #endif
 
+enum algotype {
+	ALGO_NONE,
+	ALGO_BW,
+	ALGO_CARTOON,
+};
+
+enum recordtype {
+	TYPE_NONE,
+	TYPE_RAW,
+	TYPE_ENCODED,
+};
+
 typedef struct {
 	int hour;
 	int min;
@@ -71,41 +84,56 @@ typedef struct {
 	int year;
 } DATE_TIME;
 
-struct record_control {
-	int record;
+struct record_settings {
+	int recordenable;
 	int osd_on;
-};
-
-struct osd_control {
-	int win_enable[OSD_MAX_WINDOW];
-	int win_x[OSD_MAX_WINDOW];
-	int win_y[OSD_MAX_WINDOW];
-	int win_w[OSD_MAX_WINDOW];
-	int win_h[OSD_MAX_WINDOW];
-	char win_text[OSD_MAX_WINDOW/2][25];
-	char win_file[OSD_MAX_WINDOW/2][50];
-};
-
-struct algo_control {
-	int enable;
 	int type;
 };
 
-struct nw_control {
+struct osdwindow {
+	int enable;
+	int x;
+	int y;
+	int width;
+	int height;
+	int transparency;
+	char osdtext[OSD_TEXT_MAX_LENGTH];
+	char file[100];
+};
+
+struct nw_settings {
 	char ip[16];
 	int port;
+};
+
+struct jpeg_parm {
+	int quality;
+	unsigned char *framebuff;
 };
 
 struct gen_settings {
 	int dummy;
 };
 
+struct capture_settings {
+	char device[30];
+	int height;
+	int width;
+	int framesize;
+};
+
 typedef struct server_config {
-	struct record_control image;
-	struct record_control video;
-	struct osd_control osd;
-	struct algo_control algo;
-	struct nw_control nw;
+	int enable_osd_thread;
+	int enable_imagesave_thread;
+	int enable_videosave_thread;
+	int enable_network_thread;
+	int algo_type;
+	struct jpeg_parm jpeg;
+	struct capture_settings capture;
+	struct nw_settings nw;
+	struct record_settings video;
+	struct record_settings image;
+	struct osdwindow osdwin[OSD_MAX_WINDOW];
 	struct gen_settings settings;
 } SERVER_CONFIG;
 
@@ -113,7 +141,10 @@ int KillCaptureThread;
 int KillOsdThread;
 int KillFilerecordThread;
 int KillJpegsaveThread;
+
 void apply_algo(char *, int);
 void getcurrenttime(DATE_TIME *);
+void set_osd_window_enable(int, int);
+SERVER_CONFIG *GetServerConfig(void);
 
 #endif
