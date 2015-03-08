@@ -123,6 +123,11 @@ struct capture_settings {
 	int framesize;
 };
 
+struct display_buff {
+	char *display_frame;
+	char *sdl_frame;
+};
+
 typedef struct server_config {
 	int enable_osd_thread;
 	int enable_imagesave_thread;
@@ -137,6 +142,7 @@ typedef struct server_config {
 	struct record_settings image;
 	struct osdwindow osdwin[OSD_MAX_WINDOW];
 	struct gen_settings settings;
+	struct display_buff disp;
 } SERVER_CONFIG;
 
 int KillCaptureThread;

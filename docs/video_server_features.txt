@@ -34,7 +34,8 @@
 
 	6> Can display captured video Locally.
 		6.1> Display window can be resizable.
-		6.2> Local display supports all features(ex: with algo, with OSD).
+		6.2> By default window size will be based on capture resolution.
+		6.3> Local display supports all features(ex: with algo, with OSD).
 
 	7> All features can be controlled locally as well as remotely.                             (Not Implemented for all features, See command_list.txt for details)
 		6.1> A separate user-app will be there to communicate with video-server at run-time.

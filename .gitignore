@@ -1,1 +1,5 @@
 gh-pages
+cscope.*
+tags*
+*.svn
+

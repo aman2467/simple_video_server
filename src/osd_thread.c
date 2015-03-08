@@ -23,7 +23,6 @@ extern char *g_framebuff[NUM_BUFFER];
 extern char *g_osdbuff[NUM_BUFFER];
 extern int g_writeflag;
 extern int g_osdflag;
-extern char *display_frame;
 
 /****************************************************************************
  * @func    : Initializes all OSD windows
@@ -192,7 +191,7 @@ void *osdThread(void)
 			}
 		}
 		if(serverConfig->enable_display_thread) {
-			memcpy(display_frame,g_osdbuff[i],serverConfig->capture.framesize);
+			memcpy(serverConfig->disp.display_frame,g_osdbuff[i],serverConfig->capture.framesize);
 		}
 		g_osdflag = 0;
 		g_writeflag = 1;

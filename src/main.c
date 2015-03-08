@@ -34,8 +34,6 @@ int g_osdflag = 0;
 
 char *g_framebuff[NUM_BUFFER] = {NULL};
 char *g_osdbuff[NUM_BUFFER] = {NULL};
-char *display_frame = NULL;
-char *sdl_frame = NULL;
 char *ascii_string;
 char ascii_data[STRING_WIDTH*TEXT_HEIGHT*TEXT_WIDTH*BPP];
 
@@ -117,6 +115,9 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 	serverConfig->image.recordenable = FALSE;
 	serverConfig->image.osd_on = TRUE;
 	serverConfig->image.type = TYPE_NONE;
+/* display settings */
+	serverConfig->disp.display_frame = NULL;
+	serverConfig->disp.sdl_frame = NULL;
 }
 
 /****************************************************************************
@@ -171,9 +172,9 @@ int main(int argc, char **argv)
 	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
 	if(serverConfig->enable_display_thread) {
 		if(!serverConfig->enable_osd_thread) {
-			sdl_frame = calloc(1,serverConfig->capture.framesize);
+			serverConfig->disp.sdl_frame = calloc(1,serverConfig->capture.framesize);
 		}
-		display_frame = calloc(1,serverConfig->capture.framesize);
+		serverConfig->disp.display_frame = calloc(1,serverConfig->capture.framesize);
 	}
 	for(i = 0; i < NUM_BUFFER ;i++) {
 		g_framebuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
