@@ -35,6 +35,8 @@ extern int g_osdflag;
 extern int g_writeflag;
 extern char *g_framebuff[NUM_BUFFER];
 extern int current_task;
+extern char *display_frame;
+extern char *sdl_frame;
 
 /****************************************************************************
  * @function : This is the capture thread main function. It captures video frames
@@ -141,7 +143,6 @@ void *captureThread(void)
 		perror("VIDIOC_STREAMON");
 		return NULL;
 	}
-	sleep(1);
 	i = 0;
 	frame_cnt = 0;
 	while(!KillCaptureThread) {
@@ -154,6 +155,15 @@ void *captureThread(void)
 		}
 		frame_cnt++;
 		memcpy(g_framebuff[i],buffers[buf.index].start,serverConfig->capture.framesize);
+		if(!serverConfig->enable_osd_thread) {
+			if(serverConfig->enable_display_thread) {
+				memcpy(display_frame,buffers[buf.index].start,serverConfig->capture.framesize);
+				if(serverConfig->algo_type) {
+					apply_algo(display_frame,serverConfig->algo_type);
+					memcpy(sdl_frame,display_frame,serverConfig->capture.framesize);
+				}
+			}
+		}
 		if(serverConfig->enable_imagesave_thread && !serverConfig->image.osd_on) {
 			if(serverConfig->image.recordenable) {
 				serverConfig->image.recordenable = FALSE;

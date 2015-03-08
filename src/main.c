@@ -34,7 +34,8 @@ int g_osdflag = 0;
 
 char *g_framebuff[NUM_BUFFER] = {NULL};
 char *g_osdbuff[NUM_BUFFER] = {NULL};
-
+char *display_frame = NULL;
+char *sdl_frame = NULL;
 char *ascii_string;
 char ascii_data[STRING_WIDTH*TEXT_HEIGHT*TEXT_WIDTH*BPP];
 
@@ -45,6 +46,7 @@ extern void *captureThread(void *);
 extern void *filerecordThread(void *);
 extern void *osdThread(void *);
 extern void *jpegsaveThread(void *);
+extern void *displayThread(void *);
 
 /****************************************************************************
  * @usage : This function returns pointer global configuration structure.
@@ -72,6 +74,7 @@ void usage(char *exename)
 	printf(GREEN"\t\tosd              "NONE":"YELLOW" To enable OSD\n");
 	printf(GREEN"\t\tvideosave        "NONE":"YELLOW" To enable video save\n");
 	printf(GREEN"\t\timagesave        "NONE":"YELLOW" To enable snapshot save\n");
+	printf(GREEN"\t\tdispaly          "NONE":"YELLOW" To enable local display\n");
 	printf(GREEN"\t\t-d <device>      "NONE":"YELLOW" To capture video from given device\n");
 	printf(GREEN"\t\t-w <width>       "NONE":"YELLOW" Supported capture width\n");
 	printf(GREEN"\t\t-h <height>      "NONE":"YELLOW" Supported capture height"NONE"\n");
@@ -92,6 +95,7 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 	serverConfig->enable_imagesave_thread = FALSE;
 	serverConfig->enable_videosave_thread = FALSE;
 	serverConfig->enable_network_thread = FALSE;
+	serverConfig->enable_display_thread = FALSE;
 /* algorithm settings */
 	serverConfig->algo_type = ALGO_NONE;
 /* JPEG Param settings */
@@ -99,7 +103,7 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 	serverConfig->jpeg.framebuff = NULL;
 /* Capture settings */
 	strcpy(serverConfig->capture.device,"/dev/video0");
-	serverConfig->capture.width = 848;
+	serverConfig->capture.width = 640;
 	serverConfig->capture.height = 480;
 	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
 /* network settings */
@@ -126,6 +130,7 @@ int main(int argc, char **argv)
 {
 	int threadStatus = 0;
 	pthread_t tCaptureThread, tOsdThread, tFilerecordThread, tJpegsaveThread;
+	pthread_t tDisplayThread;
 	int i;
 	int command;
 	int arg1, arg2;
@@ -152,6 +157,8 @@ int main(int argc, char **argv)
 			serverConfig->enable_videosave_thread = TRUE;
 		} else if (strcmp(argv[i], "imagesave") == 0) {
 			serverConfig->enable_imagesave_thread = TRUE;
+		} else if (strcmp(argv[i], "display") == 0) {
+			serverConfig->enable_display_thread = TRUE;
 		} else if (strcmp(argv[i], "-d") == 0) {
 			strcpy(serverConfig->capture.device,argv[++i]);
 		} else if (strcmp(argv[i], "-w") == 0) {
@@ -162,6 +169,12 @@ int main(int argc, char **argv)
 	}
 
 	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
+	if(serverConfig->enable_display_thread) {
+		if(!serverConfig->enable_osd_thread) {
+			sdl_frame = calloc(1,serverConfig->capture.framesize);
+		}
+		display_frame = calloc(1,serverConfig->capture.framesize);
+	}
 	for(i = 0; i < NUM_BUFFER ;i++) {
 		g_framebuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
 		memset(g_framebuff[i],0,serverConfig->capture.framesize);
@@ -208,6 +221,17 @@ int main(int argc, char **argv)
 		pr_dbg("JPEG Save Thread created\n");
 		threadStatus |= JPEGSAVE_THR;
 	}
+
+	if(serverConfig->enable_display_thread) {
+		KillDisplayThread = 0;
+		if(pthread_create(&tDisplayThread, NULL, displayThread, NULL)) {
+			perror("Display Thread create fail\n");
+			exit(0);
+		}
+		pr_dbg("Display Thread created\n");
+		threadStatus |= DISPLAY_THR;
+	}
+
 	if((sock_fd=socket(AF_INET,SOCK_DGRAM,0))<0) {/* socket creation  */
 		perror("socket");
 		exit(0);
@@ -242,6 +266,11 @@ int main(int argc, char **argv)
 		pr_dbg(CYAN"\tJPEG save \t\t:\t"GREEN" YES"NONE"\n");
 	} else {
 		pr_dbg(CYAN"\tJPEG save \t\t:\t"RED" NO"NONE"\n");
+	}
+	if(serverConfig->enable_display_thread == TRUE) {
+		pr_dbg(CYAN"\tDisplay \t\t:\t"GREEN" YES"NONE"\n");
+	} else {
+		pr_dbg(CYAN"\tDisplay \t\t:\t"RED" NO"NONE"\n");
 	}
 	pr_dbg(YELLOW"/************************************************************/"NONE"\n");
 #endif
@@ -334,6 +363,12 @@ int main(int argc, char **argv)
 		usleep(10);
 	}
 
+	if(serverConfig->enable_display_thread == TRUE) {
+		if(threadStatus & DISPLAY_THR){
+			KillDisplayThread = 1;
+			pthread_join(tDisplayThread, NULL);
+		}
+	}
 	if(serverConfig->enable_imagesave_thread == TRUE) {
 		if(threadStatus & JPEGSAVE_THR){
 			KillJpegsaveThread = 1;

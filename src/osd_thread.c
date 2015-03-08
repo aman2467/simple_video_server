@@ -23,6 +23,7 @@ extern char *g_framebuff[NUM_BUFFER];
 extern char *g_osdbuff[NUM_BUFFER];
 extern int g_writeflag;
 extern int g_osdflag;
+extern char *display_frame;
 
 /****************************************************************************
  * @func    : Initializes all OSD windows
@@ -145,7 +146,6 @@ void *osdThread(void)
 	char *ptr, *ptri, *osd_data_ptr = NULL;
 	FILE *fp;
 	SERVER_CONFIG *serverConfig = GetServerConfig();
-	char osdwinstring[5][25];
 
 	if(osd_init(osd_data_ptr) == FAIL) {
 		printf("OSD init Failed\n");
@@ -176,10 +176,7 @@ void *osdThread(void)
 					}
 					fclose(fp);
 				} else {
-					if(strcmp(osdwinstring[window-5],serverConfig->osdwin[window].osdtext) != 0) {
 						get_osd_string(serverConfig->osdwin[window].osdtext,osd_data_ptr);
-						strcpy(osdwinstring[window-5],serverConfig->osdwin[window].osdtext);
-					}
 				}
 				ptri = osd_data_ptr;
 				ptr = g_osdbuff[i];
@@ -193,6 +190,9 @@ void *osdThread(void)
 					cnt++;
 				}
 			}
+		}
+		if(serverConfig->enable_display_thread) {
+			memcpy(display_frame,g_osdbuff[i],serverConfig->capture.framesize);
 		}
 		g_osdflag = 0;
 		g_writeflag = 1;

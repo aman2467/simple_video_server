@@ -35,6 +35,7 @@ CFLAGS += -g -O3
 #LD_FLAGS += -L${LIB_DIR}
 LD_FLAGS += -lpthread
 LD_FLAGS += -ljpeg
+LD_FLAGS += -lSDL2
 #LD_FLAGS += -losdapi -lalgo
 CPPFLAGS += -I. \
 		-I./inc/ \
@@ -45,7 +46,7 @@ CPPFLAGS += -I. \
 all: video_server utils cli_app info
 
 video_server:
-	${VERBOSE} sed -i "s,PATH,$(DATABASE_DIR),g"  $(BASEDIR)/inc/osd_thread.h
+	${VERBOSE} sed -i "s,PATH,$(DATABASE_DIR),g"  $(BASEDIR)/inc/common.h
 	${VERBOSE} ${CC} ${SRC_DIR}/*.c ${CFLAGS} ${CPPFLAGS} ${LD_FLAGS} -o ${RELTARGET}
 
 utils:

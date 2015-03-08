@@ -163,13 +163,13 @@ void *jpegsaveThread(void)
 				rgb = yuyv2rgb(serverConfig->jpeg.framebuff, serverConfig->capture.width, serverConfig->capture.height);
 				jpeg(fp, rgb, serverConfig->capture.width, serverConfig->capture.height, serverConfig->jpeg.quality);
 				free(rgb);
-				free(serverConfig->jpeg.framebuff);
-				serverConfig->jpeg.framebuff = NULL;
 				break;
 			case 1:
 				fwrite(serverConfig->jpeg.framebuff,serverConfig->capture.framesize,1,fp);
 				break;
 		}
+		free(serverConfig->jpeg.framebuff);
+		serverConfig->jpeg.framebuff = NULL;
 		fclose(fp);
 	}
 	return 0;

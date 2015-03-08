@@ -32,6 +32,7 @@
 #define OSD_THR 0x02
 #define FILERECORD_THR 0x04
 #define JPEGSAVE_THR 0x08
+#define DISPLAY_THR 0x10
 
 #define FALSE 0
 #define TRUE 1
@@ -127,6 +128,7 @@ typedef struct server_config {
 	int enable_imagesave_thread;
 	int enable_videosave_thread;
 	int enable_network_thread;
+	int enable_display_thread;
 	int algo_type;
 	struct jpeg_parm jpeg;
 	struct capture_settings capture;
@@ -141,6 +143,7 @@ int KillCaptureThread;
 int KillOsdThread;
 int KillFilerecordThread;
 int KillJpegsaveThread;
+int KillDisplayThread;
 
 void apply_algo(char *, int);
 void getcurrenttime(DATE_TIME *);
