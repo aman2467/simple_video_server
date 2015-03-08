@@ -24,7 +24,12 @@ extern char *g_osdbuff[NUM_BUFFER];
 extern int g_writeflag;
 extern int g_osdflag;
 
-void init_OSDWindows()
+/****************************************************************************
+ * @func    : Initializes all OSD windows
+ * @arg     : void
+ * @return  : void
+ ***************************************************************************/
+void init_OSDWindows(void)
 {
 	int window;
 	SERVER_CONFIG *serverConfig = GetServerConfig();
@@ -130,8 +135,7 @@ void init_OSDWindows()
 }
 
 /****************************************************************************
- * @func    : v4l2CaptureThread
- *          Main thread function
+ * @func    : OSD Thread main funtion
  * @arg1    : void
  * @return  : void
  ***************************************************************************/
@@ -141,6 +145,7 @@ void *osdThread(void)
 	char *ptr, *ptri, *osd_data_ptr = NULL;
 	FILE *fp;
 	SERVER_CONFIG *serverConfig = GetServerConfig();
+	char osdwinstring[5][25];
 
 	if(osd_init(osd_data_ptr) == FAIL) {
 		printf("OSD init Failed\n");
@@ -171,7 +176,10 @@ void *osdThread(void)
 					}
 					fclose(fp);
 				} else {
-					get_osd_string(serverConfig->osdwin[window].osdtext,osd_data_ptr);
+					if(strcmp(osdwinstring[window-5],serverConfig->osdwin[window].osdtext) != 0) {
+						get_osd_string(serverConfig->osdwin[window].osdtext,osd_data_ptr);
+						strcpy(osdwinstring[window-5],serverConfig->osdwin[window].osdtext);
+					}
 				}
 				ptri = osd_data_ptr;
 				ptr = g_osdbuff[i];

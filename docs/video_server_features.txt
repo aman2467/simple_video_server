@@ -47,4 +47,4 @@
 
 # Issue :
 	1> Sometimes frames are repeating.
-
+	2> Cartoon algo is not proper.

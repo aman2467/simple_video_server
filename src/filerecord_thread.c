@@ -1,7 +1,7 @@
 /* ==========================================================================
  * @file    : filerecord_thread.c
  *
- * @description : This file contains code to record raw video.
+ * @description : This file contains code to record/save video.
  *
  * @author  : Aman Kumar (2015)
  *
@@ -22,7 +22,13 @@ extern char *g_framebuff[NUM_BUFFER];
 extern char *g_osdbuff[NUM_BUFFER];
 extern int g_writeflag;
 
-
+/****************************************************************************
+ * @usage : This function creates a file name based on timestamp.
+ *
+ * @arg1  : pointer to file name
+ * @arg2  : video type
+ * @return     : void
+ * *************************************************************************/
 void get_video_filename(char *name, int val)
 {
 	DATE_TIME current;
@@ -49,6 +55,12 @@ void get_video_filename(char *name, int val)
 	}
 }
 
+/****************************************************************************
+ * @usage : This is the thread function for recording/saving a video file.
+ *
+ * @arg  : void
+ * @return     : void
+ * *************************************************************************/
 void *filerecordThread(void)
 {
 	int i = 0;

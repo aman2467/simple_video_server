@@ -36,6 +36,13 @@ extern int g_writeflag;
 extern char *g_framebuff[NUM_BUFFER];
 extern int current_task;
 
+/****************************************************************************
+ * @function : This is the capture thread main function. It captures video frames
+ *          using V4l2 and passes those buffers to other threads.
+ *
+ * @arg  : void
+ * @return     : void
+ * *************************************************************************/
 void *captureThread(void)
 {
 	int fd, i;

@@ -46,7 +46,6 @@ extern void *filerecordThread(void *);
 extern void *osdThread(void *);
 extern void *jpegsaveThread(void *);
 
-
 /****************************************************************************
  * @usage : This function returns pointer global configuration structure.
  *
@@ -118,7 +117,7 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 
 /****************************************************************************
  * @main : This is the main function of the application. It creates separate
- *          threads for receive packets and save video data to file.
+ *          threads for capture, save, etc and later acts as command server.
  *
  * @arg  : command line arguments
  * @return     : 0

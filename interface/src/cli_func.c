@@ -1,9 +1,18 @@
-/*****************************************************************************
+/* ==========================================================================
+ * @file    : cli_func.c
  *
- * @file   cli_function.c
- * @brief  This program contains all the functions called by cli functions.
+ * @description : This file contains definition to CLI functions used for
+ *                  communication to video server.
  *
- *****************************************************************************/
+ * @author  : Aman Kumar (2015)
+ *
+ * @copyright   : The code contained herein is licensed under the GNU General
+ *				Public License. You may obtain a copy of the GNU General
+ *				Public License Version 2 or later at the following locations:
+ *              http://www.opensource.org/licenses/gpl-license.html
+ *              http://www.gnu.org/copyleft/gpl.html
+ * ========================================================================*/
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -16,6 +25,13 @@
 
 extern char g_video_server_ip[16];
 
+/****************************************************************************
+ * @usage : This function sends a command to video server using UDP socket.
+ *
+ * @arg1  : command value
+ * @arg2  : argument for command
+ * @return     : success/failure of function
+ * *************************************************************************/
 int sendCommand(int command, char *arg)
 {
 	int sock_fd;
@@ -58,6 +74,12 @@ int sendCommand(int command, char *arg)
 	return SUCCESS;
 }
 
+/****************************************************************************
+ * @usage : This function sends command to take a snap.
+ *
+ * @arg  : value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
 int takesnap(int value)
 {
 	char arg[26];
@@ -69,6 +91,12 @@ int takesnap(int value)
 	return SUCCESS;
 }
 
+/****************************************************************************
+ * @usage : This function sends command to record video.
+ *
+ * @arg  : value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
 int recordvideo(int value)
 {
 	char arg[26];
@@ -80,6 +108,12 @@ int recordvideo(int value)
 	return SUCCESS;
 }
 
+/****************************************************************************
+ * @usage : This function sends command to set algo type
+ *
+ * @arg  : value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
 int setalgotype(int type)
 {
 	char arg[26];
@@ -91,6 +125,13 @@ int setalgotype(int type)
 	return SUCCESS;
 }
 
+/****************************************************************************
+ * @usage : This function sends command to enable/disable OSD window
+ *
+ * @arg1  : OSD window number input from command line
+ * @arg2  : enable/disable value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
 int osdwinenable(int win, int enable)
 {
 	char arg[26];
@@ -103,6 +144,12 @@ int osdwinenable(int win, int enable)
 	return SUCCESS;
 }
 
+/****************************************************************************
+ * @usage : This function sends command to enable/disable OSD on saved image
+ *
+ * @arg  : value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
 int osdonimage(int enable)
 {
 	char arg[26];
@@ -114,6 +161,12 @@ int osdonimage(int enable)
 	return SUCCESS;
 }
 
+/****************************************************************************
+ * @usage : This function sends command to enable/disable OSD on saved video.
+ *
+ * @arg  : value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
 int osdonvideo(int enable)
 {
 	char arg[26];

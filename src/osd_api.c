@@ -1,3 +1,17 @@
+/* ==========================================================================
+ * @file    : osd_api.c
+ *
+ * @description : This file contains different API definitions used for OSD.
+ *
+ * @author  : Aman Kumar (2015)
+ *
+ * @copyright   : The code contained herein is licensed under the GNU General
+ *				Public License. You may obtain a copy of the GNU General
+ *				Public License Version 2 or later at the following locations:
+ *              http://www.opensource.org/licenses/gpl-license.html
+ *              http://www.gnu.org/copyleft/gpl.html
+ * ========================================================================*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,6 +22,11 @@
 extern char ascii_data[STRING_WIDTH*TEXT_HEIGHT*BPP];
 extern char *ascii_string;
 
+/****************************************************************************
+ * @func    : This initializes OSD ascii database.
+ * @arg    : pointer to osd data pointer for all window.
+ * @return  : success/failure of funtion
+ ***************************************************************************/
 int osd_init(char *osd)
 {
 	FILE *fp;
@@ -59,6 +78,12 @@ void fill_osd_data(char *dest, char *src, int size, int transparency)
 	}
 }
 
+/****************************************************************************
+ * @func    : creates OSD data for a particular string from ASCII database.
+ * @arg1    : pointer to string which is to be displayed
+ * @arg2    : pointer to osd data buffer for that string
+ * @return  : void
+ ***************************************************************************/
 void get_osd_string(char *str, char *osdstring)
 {
 	int arr[20] = {'\0'};

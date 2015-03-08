@@ -19,6 +19,15 @@
 #include <jpeglib.h>
 #include <common.h>
 
+/****************************************************************************
+ * @func    : saves a jpeg frame
+ * @arg1    : File descriptor
+ * @arg2    : pointer to rgb data holder
+ * @arg3    : width of image
+ * @arg4    : height of image
+ * @arg5    : jpeg quality value
+ * @return  : void
+ ***************************************************************************/
 void jpeg(FILE* dest, unsigned char* rgb, unsigned int width, unsigned int height, int quality)
 {
 	size_t i, j;
@@ -55,11 +64,24 @@ void jpeg(FILE* dest, unsigned char* rgb, unsigned int width, unsigned int heigh
 	free(image);
 }
 
+/****************************************************************************
+ * @func    : returns value after checking a range for it
+ * @arg1    : minimum allowed range
+ * @arg2    : maximum allowed range
+ * @return  : returns checked value
+ ***************************************************************************/
 int minmax(int min, int v, int max)
 {
 	return (v < min) ? min : (max < v) ? max : v;
 }
 
+/****************************************************************************
+ * @func    : creates rgb equivalent of yuv data
+ * @arg1    : pointer to yuv data
+ * @arg2    : width of image
+ * @arg3    : height of image
+ * @return  : returns rgb data pointer
+ ***************************************************************************/
 unsigned char* yuyv2rgb(unsigned char* yuyv, unsigned int width, unsigned int height)
 {
 	size_t i, j;
@@ -82,6 +104,13 @@ unsigned char* yuyv2rgb(unsigned char* yuyv, unsigned int width, unsigned int he
 	return rgb;
 }
 
+/****************************************************************************
+ * @usage : This function creates a file name based on timestamp.
+ *
+ * @arg1  : pointer to file name
+ * @arg2  : image type
+ * @return     : void
+ * *************************************************************************/
 void get_image_filename(char *name, int val)
 {
 	DATE_TIME current;
@@ -109,7 +138,12 @@ void get_image_filename(char *name, int val)
 	}
 }
 
-void *jpegsaveThread()
+/****************************************************************************
+ * @func    : JPEG save Thread main funtion
+ * @arg1    : void
+ * @return  : void
+ ***************************************************************************/
+void *jpegsaveThread(void)
 {
 	unsigned char* rgb;
 	char outfile[50] = {0};
