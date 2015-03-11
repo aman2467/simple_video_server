@@ -353,9 +353,9 @@ void CmndOsdOnImage(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
 {
 	int enable;
 	if (uwCmndArgCount == 2) {
-		if(strcmp("enable",apcCmndArgVal[2]) == 0) {
+		if(strcmp("enable",apcCmndArgVal[1]) == 0) {
 			enable = 1;
-		} else if(strcmp("disable",apcCmndArgVal[2]) == 0) {
+		} else if(strcmp("disable",apcCmndArgVal[1]) == 0) {
 			enable = 0;
 		}
 		if(osdonimage(enable) < 0) {
@@ -383,9 +383,9 @@ void CmndOsdOnVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
 {
 	int enable;
 		if (uwCmndArgCount == 2) {
-			if(strcmp("enable",apcCmndArgVal[2]) == 0) {
+			if(strcmp("enable",apcCmndArgVal[1]) == 0) {
 				enable = 1;
-			} else if(strcmp("disable",apcCmndArgVal[2]) == 0) {
+			} else if(strcmp("disable",apcCmndArgVal[1]) == 0) {
 				enable = 0;
 			}
 			if(osdonvideo(enable) < 0) {

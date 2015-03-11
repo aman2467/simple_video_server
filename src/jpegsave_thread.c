@@ -116,7 +116,6 @@ void get_image_filename(char *name, int val)
 	DATE_TIME current;
 
 	getcurrenttime(&current);
-
 	if(system("mkdir -p records") < 0) {
 		printf("Fail to create 'records' directory\n");
 	}
@@ -152,7 +151,7 @@ void *jpegsaveThread(void)
 
 	while(!KillJpegsaveThread) {
 		while(serverConfig->jpeg.framebuff == NULL) {
-			usleep(10);
+			usleep(5);
 		}
 
 		get_image_filename(outfile,serverConfig->image.type);

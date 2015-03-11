@@ -109,11 +109,11 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 	strcpy(serverConfig->nw.ip,"127.0.0.1");
 /* video record settings */
 	serverConfig->video.recordenable = FALSE;
-	serverConfig->video.osd_on = TRUE;
+	serverConfig->video.osd_on = FALSE;
 	serverConfig->video.type = TYPE_NONE;
 /* image record settings */
 	serverConfig->image.recordenable = FALSE;
-	serverConfig->image.osd_on = TRUE;
+	serverConfig->image.osd_on = FALSE;
 	serverConfig->image.type = TYPE_NONE;
 /* display settings */
 	serverConfig->disp.display_frame = NULL;
