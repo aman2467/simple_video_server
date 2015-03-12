@@ -134,7 +134,7 @@ int main(int argc, char **argv)
 	pthread_t tDisplayThread;
 	int i;
 	int command;
-	int arg1, arg2;
+	int arg1, arg2, arg3;
 	int ret = 0;
 	char commandstr[4];
 	char status[10]={0};
@@ -284,6 +284,7 @@ int main(int argc, char **argv)
 		}
 		memcpy(commandstr,userdata,sizeof(int));
 		command = *((int *)commandstr);
+		memset(data,0,26);
 		memcpy(data,userdata+4,26);
 		switch(command) {
 			case COMMAND_SET_TAKE_SNAPSHOT:
@@ -329,6 +330,26 @@ int main(int argc, char **argv)
 					ret = 1;
 				}
 				break;
+			case COMMAND_SET_OSD_TEXT:
+				arg1 = *((int *)data);
+				if(serverConfig->enable_osd_thread) {
+					set_osd_window_text(arg1,data+4);
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			case COMMAND_SET_OSD_POSITION:
+				arg1 = *((int *)data);
+				arg2 = *((int *)(data+4));
+				arg3 = *((int *)(data+8));
+				if(serverConfig->enable_osd_thread) {
+					set_osd_window_position(arg1,arg2,arg3);
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
 			case COMMAND_SET_OSD_ON_IMAGE:
 				arg1 = *((int *)data);
 				if(serverConfig->enable_osd_thread && serverConfig->enable_imagesave_thread) {
@@ -342,6 +363,16 @@ int main(int argc, char **argv)
 				arg1 = *((int *)data);
 				if(serverConfig->enable_osd_thread && serverConfig->enable_videosave_thread) {
 					serverConfig->video.osd_on = arg1;
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			case COMMAND_SET_OSD_TRANSPARENCY:
+				arg1 = *((int *)data);
+				arg2 = *((int *)(data+4));
+				if(serverConfig->enable_osd_thread) {
+					set_osd_window_transparency(arg1, arg2);
 					ret = 0;
 				} else {
 					ret = 1;

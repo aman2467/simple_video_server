@@ -49,8 +49,11 @@ void CmndTakeSnap(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndRecordVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndSetAlgoType(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdWinEnable(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndOsdWinText(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndOsdWinPos(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdOnImage(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdOnVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndOsdWinTrans(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndHelp(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndExit(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 
@@ -59,7 +62,10 @@ int takesnap(int);
 int recordvideo(int);
 int setalgotype(int);
 int osdwinenable(int, int);
+int osdwintext(int, char *);
+int osdwinpos(int, int, int);
 int osdonimage(int);
 int osdonvideo(int);
+int osdwintrans(int, int);
 
 #endif

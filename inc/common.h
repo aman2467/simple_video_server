@@ -154,6 +154,10 @@ int KillDisplayThread;
 void apply_algo(char *, int);
 void getcurrenttime(DATE_TIME *);
 void set_osd_window_enable(int, int);
+void set_osd_window_text(int, char *);
+void set_osd_window_position(int, int, int);
+void set_osd_window_transparency(int, int);
+void update_osd_window(int);
 SERVER_CONFIG *GetServerConfig(void);
 
 #endif

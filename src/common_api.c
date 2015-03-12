@@ -13,8 +13,10 @@
  * ========================================================================*/
 
 #include <osd_thread.h>
+#include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
+#include <string.h>
 #include <common.h>
 
 /****************************************************************************
@@ -52,6 +54,65 @@ void set_osd_window_enable(int window, int enable)
 	SERVER_CONFIG *serverConfig = GetServerConfig();
 
 	serverConfig->osdwin[window].enable = enable;
+}
+
+/****************************************************************************
+ * @usage : This function displays given text on particular OSD window.
+ *
+ * @arg1   : OSD window number
+ * @arg2   : OSD text
+ * @return     : void
+ * *************************************************************************/
+void set_osd_window_text(int window, char *text)
+{
+	SERVER_CONFIG *serverConfig = GetServerConfig();
+
+	strcpy(serverConfig->osdwin[window].osdtext,text);
+
+	serverConfig->osdwin[window].width = TEXT_WIDTH*strlen(text);
+	serverConfig->osdwin[window].height = TEXT_HEIGHT;
+	set_osd_window_position(window, serverConfig->osdwin[window].x, serverConfig->osdwin[window].y);
+	serverConfig->osdwin[window].enable = TRUE;
+}
+
+/****************************************************************************
+ * @usage : This function displays given text on particular OSD window.
+ *
+ * @arg1   : OSD window number
+ * @arg2   : position x
+ * @arg2   : position y
+ * @return     : void
+ * *************************************************************************/
+void set_osd_window_position(int window, int x, int y)
+{
+	SERVER_CONFIG *serverConfig = GetServerConfig();
+
+	if(x+serverConfig->osdwin[window].width > serverConfig->capture.width) {
+		serverConfig->osdwin[window].x = serverConfig->capture.width - serverConfig->osdwin[window].width;
+	} else {
+		serverConfig->osdwin[window].x = x;
+	}
+	if(y+serverConfig->osdwin[window].height > serverConfig->capture.height) {
+		serverConfig->osdwin[window].y = serverConfig->capture.height - serverConfig->osdwin[window].height;
+	} else {
+		serverConfig->osdwin[window].y = y;
+	}
+}
+
+/****************************************************************************
+ * @usage : This function enables/disables particular OSD window's transparency.
+ *
+ * @arg1   : OSD window number
+ * @arg2   : enable/disable variable
+ * @return     : void
+ * *************************************************************************/
+void set_osd_window_transparency(int window, int enable)
+{
+	SERVER_CONFIG *serverConfig = GetServerConfig();
+	
+	if(serverConfig->osdwin[window].enable) {
+		serverConfig->osdwin[window].transparency = enable;
+	}
 }
 
 /****************************************************************************

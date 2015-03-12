@@ -18,7 +18,7 @@
 #define FALSE 0
 
 char prompt[16] = "CLI Prompt:/>> ";
-char g_video_server_ip[16] = {0};
+char g_video_server_ip[16] = "127.0.0.1";
 
 static char  acCmndLine[CMND_LINE_MAX_LEN + 2]; /* Command Line buffer */
 static char  *pcCmndLinePtr;	/* Pointer into Cmnd Line buffer */
@@ -39,8 +39,11 @@ const  struct  CmndTableEntry_t  asCommand[] = {
 	{"recordvideo",			USER_CMD,		CmndRecordVideo},	
 	{"setalgotype",			USER_CMD,		CmndSetAlgoType},	
 	{"osdwinenable",		USER_CMD,		CmndOsdWinEnable},	
+	{"osdwintext",			USER_CMD,		CmndOsdWinText},	
+	{"osdwinpos",			USER_CMD,		CmndOsdWinPos},	
 	{"osdonimage",			USER_CMD,		CmndOsdOnImage},	
 	{"osdonvideo",			USER_CMD,		CmndOsdOnVideo},	
+	{"osdwintrans",			USER_CMD,		CmndOsdWinTrans},	
 	{"help",				USER_CMD,		CmndHelp},
 	{"exit",				USER_CMD,		CmndExit},
 	{"$",					DEBUG_CMD,      NULL},   /* Dummy last entry */
@@ -342,6 +345,98 @@ usage:
 }
 
 /**********************************************************************
+ * CmndOsdWinText :  This function is called when a Command 'osdwintext' 
+ *			  is typed in the CLI prompt. It adds/changes OSD text.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndOsdWinText(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int win;
+	char text[25] = {0};
+	if (uwCmndArgCount >= 3) {
+		win = atoi(apcCmndArgVal[1]);
+		if(win < 5 || win > 9) {
+			printf("\nInvalid OSD Window number\n");
+			goto usage;
+		}
+		if(uwCmndArgCount == 3) {
+			if(strlen(apcCmndArgVal[2]) > 20) {
+				printf("Maximum allowed text size is 20.");
+				return;
+			}
+			if(osdwintext(win,apcCmndArgVal[2]) < 0) {
+				printf("\nCommand osdwintext failed\n");
+			}
+			return;
+		} else if (uwCmndArgCount == 4) {
+			if(strlen(apcCmndArgVal[2])+strlen(apcCmndArgVal[3]) > 19) {
+				printf("Maximum allowed text size is 20.");
+				return;
+			}
+			strcpy(text,apcCmndArgVal[2]);
+			text[strlen(apcCmndArgVal[2])] = ' ';
+			strcat(text,apcCmndArgVal[3]);
+			if(osdwintext(win,text) < 0) {
+				printf("\nCommand osdwintext failed\n");
+			}
+			return;
+		} else {
+			printf("\nOnly one space is allowed\n");
+		}
+	}
+
+usage:
+	printf("\nUsage: osdwintext <OSD window no.> <text>\n");
+	printf("Arg's:\t1. OSD window no -> OSD window between 5 to 9\n");
+	printf("\t2. text -> text to be displayed over video\n");
+	return;
+}
+
+/**********************************************************************
+ * CmndOsdWinPos :  This function is called when a Command 'osdwinpos' 
+ *			  is typed in the CLI prompt. It changes posiiton of OSD window.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndOsdWinPos(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int win, x, y;
+	if (uwCmndArgCount == 4) {
+		win = atoi(apcCmndArgVal[1]);
+		if(win < 0 || win > 9) {
+			printf("\nInvalid OSD Window number\n");
+			goto usage;
+		}
+		x = atoi(apcCmndArgVal[2]);
+		if(x < 0 || x > 1280) {
+			printf("\nInvalid Position\n");
+			goto usage;
+		}
+		y = atoi(apcCmndArgVal[3]);
+		if(y < 0 || y > 720) {
+			printf("\nInvalid Position\n");
+			goto usage;
+		}
+		if(osdwinpos(win, x, y) < 0) {
+			printf("\nCommand osdwinpos failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: osdwinpos <OSD window no.> <X-pos> <Y-pos>\n");
+	printf("Arg's:\t1. OSD window no -> OSD window between 4 to 9\n");
+	printf("\t2. x -> x co-ordinate for the given OSD window\n");
+	printf("\t3. y -> y co-ordinate for the given OSD window\n");
+	return;
+}
+
+/**********************************************************************
  * CmndOsdOnImage :  This function is called when a Command 'osdonimage' 
  *			  is typed in the CLI prompt. It enables/disables OSD on saved snapshot.
  *
@@ -401,17 +496,73 @@ usage:
 	return;
 }
 
+/**********************************************************************
+ * CmndOsdWinTrans :  This function is called when a Command 'osdwintrans' 
+ *			  is typed in the CLI prompt. It enables/disables osd transparency.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndOsdWinTrans(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int win,enable;
+	if (uwCmndArgCount == 3) {
+		win = atoi(apcCmndArgVal[1]);
+		if(win < 0 || win > 9) {
+			printf("\nInvalid OSD Window number\n");
+			goto usage;
+		}
+		if(strcmp("enable",apcCmndArgVal[2]) == 0) {
+			enable = 1;
+		} else if(strcmp("disable",apcCmndArgVal[2]) == 0) {
+			enable = 0;
+		}
+		if(osdwintrans(win,enable) < 0) {
+			printf("\nCommand osdwintrans failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: osdwintrans <OSD window no.> <enable|disable>\n");
+	printf("Arg's:\t1. OSD window no -> OSD window between 0 to 9\n");
+	printf("\t2. enable -> To enable given OSD Window\n");
+	printf("\t   disble -> To disable given OSD Window\n");
+	return;
+}
+
+/***********************************************************************
+ * @function : print the usage
+ *
+ * @arg	 : command name
+ * @return	 : void
+ * *******************************************************************/
+void usage(char *name)
+{
+	printf("\nUsage: %s <video_server_ip>",name);
+	printf("\nNote : video_server_ip is optional.\nif used on same system where video server is running\n");
+}
+
 /*******************************************
  * Main function for Command Line Interface
  ******************************************/
 int main(int argc, char **argv)
 {
 
-	if(argc != 2) {
-		printf("\nUsage: %s <video_server_ip>\n",argv[0]);
+	if(argc > 2) {
+		usage(argv[0]);
 		exit(0);
 	}
-	strcpy(g_video_server_ip,argv[1]);
+
+	if((argc == 2) && (strcmp(argv[1],"-h")==0)) {
+		usage(argv[0]);
+		exit(0);
+	}
+
+	if(argc > 1) {
+		strcpy(g_video_server_ip,argv[1]);
+	}
 
 	while (1) {
 		printf("%s", prompt);

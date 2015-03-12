@@ -82,7 +82,7 @@ int sendCommand(int command, char *arg)
  * *************************************************************************/
 int takesnap(int value)
 {
-	char arg[26];
+	char arg[26] = {0};
 
 	memcpy(arg,&value,sizeof(value));
 	if(sendCommand(COMMAND_SET_TAKE_SNAPSHOT,arg) < 0) {
@@ -99,7 +99,7 @@ int takesnap(int value)
  * *************************************************************************/
 int recordvideo(int value)
 {
-	char arg[26];
+	char arg[26] = {0};
 
 	memcpy(arg,&value,sizeof(value));
 	if(sendCommand(COMMAND_SET_RECORD_VIDEO,arg) < 0) {
@@ -116,7 +116,7 @@ int recordvideo(int value)
  * *************************************************************************/
 int setalgotype(int type)
 {
-	char arg[26];
+	char arg[26] = {0};
 
 	memcpy(arg,&type,sizeof(type));
 	if(sendCommand(COMMAND_SET_ALGO_TYPE,arg) < 0) {
@@ -134,11 +134,50 @@ int setalgotype(int type)
  * *************************************************************************/
 int osdwinenable(int win, int enable)
 {
-	char arg[26];
+	char arg[26] = {0};
 
 	memcpy(arg,&win,sizeof(win));
 	memcpy(arg+sizeof(win),&enable,sizeof(enable));
 	if(sendCommand(COMMAND_SET_OSD_ENABLE,arg) < 0) {
+		return FAILURE;
+	}
+	return SUCCESS;
+}
+
+/****************************************************************************
+ * @usage : This function sends command to display over OSD window
+ *
+ * @arg1  : OSD window number input from command line
+ * @arg2  : text input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
+int osdwintext(int win, char *text)
+{
+	char arg[26] = {0};
+
+	memcpy(arg,&win,sizeof(win));
+	memcpy(arg+sizeof(win),text,strlen(text));
+	if(sendCommand(COMMAND_SET_OSD_TEXT,arg) < 0) {
+		return FAILURE;
+	}
+	return SUCCESS;
+}
+
+/****************************************************************************
+ * @usage : This function sends command to change the position of OSD window
+ *
+ * @arg1  : OSD window number input from command line
+ * @arg2  : position input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
+int osdwinpos(int win, int x, int y)
+{
+	char arg[26] = {0};
+
+	memcpy(arg,&win,sizeof(win));
+	memcpy(arg+sizeof(win),&x,sizeof(x));
+	memcpy(arg+sizeof(win)+sizeof(x),&y,sizeof(y));
+	if(sendCommand(COMMAND_SET_OSD_POSITION,arg) < 0) {
 		return FAILURE;
 	}
 	return SUCCESS;
@@ -152,7 +191,7 @@ int osdwinenable(int win, int enable)
  * *************************************************************************/
 int osdonimage(int enable)
 {
-	char arg[26];
+	char arg[26] = {0};
 
 	memcpy(arg,&enable,sizeof(enable));
 	if(sendCommand(COMMAND_SET_OSD_ON_IMAGE,arg) < 0) {
@@ -169,10 +208,29 @@ int osdonimage(int enable)
  * *************************************************************************/
 int osdonvideo(int enable)
 {
-	char arg[26];
+	char arg[26] = {0};
 
 	memcpy(arg,&enable,sizeof(enable));
 	if(sendCommand(COMMAND_SET_OSD_ON_VIDEO,arg) < 0) {
+		return FAILURE;
+	}
+	return SUCCESS;
+}
+
+/****************************************************************************
+ * @usage : This function sends command to enable/disable OSD transparency.
+ *
+ * @arg1  : OSD window number input from command line
+ * @arg2  : enable/disable value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
+int osdwintrans(int win, int enable)
+{
+	char arg[26] = {0};
+
+	memcpy(arg,&win,sizeof(win));
+	memcpy(arg+sizeof(win),&enable,sizeof(enable));
+	if(sendCommand(COMMAND_SET_OSD_TRANSPARENCY,arg) < 0) {
 		return FAILURE;
 	}
 	return SUCCESS;

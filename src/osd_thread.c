@@ -190,6 +190,7 @@ void *osdThread(void)
 				}
 			}
 		}
+		apply_algo(g_osdbuff[i],serverConfig->algo_type);
 		if(serverConfig->enable_display_thread) {
 			memcpy(serverConfig->disp.display_frame,g_osdbuff[i],serverConfig->capture.framesize);
 		}

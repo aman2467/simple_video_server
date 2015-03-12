@@ -82,7 +82,6 @@ void *filerecordThread(void)
 			while(serverConfig->video.recordenable == TRUE) {
 				while(!g_writeflag) usleep(1);
 				if(serverConfig->enable_osd_thread == TRUE) {
-					apply_algo(g_osdbuff[i],serverConfig->algo_type);
 					if(fwrite(g_osdbuff[i],serverConfig->capture.framesize, 1, fp) < 0) {
 						perror("WRITE");
 						continue;

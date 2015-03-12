@@ -21,8 +21,11 @@ enum command_list {
 	COMMAND_SET_VIDEO_TYPE,			/* sets video type as raw/encoded */ 
 	COMMAND_SET_ALGO_TYPE,			/* sets algo type */
 	COMMAND_SET_OSD_ENABLE,			/* enables given OSD window */
+	COMMAND_SET_OSD_TEXT,			/* displays given text on given OSD window */
+	COMMAND_SET_OSD_POSITION,		/* changes position of given OSD window */
 	COMMAND_SET_OSD_ON_IMAGE,		/* enables/disables OSD on snapshot to be saved */
 	COMMAND_SET_OSD_ON_VIDEO,		/* enables/disables OSD on video to be saved */
+	COMMAND_SET_OSD_TRANSPARENCY,	/* enables/disables given OSD window's transparency */
 };
 
 #endif

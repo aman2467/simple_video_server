@@ -44,8 +44,11 @@ void *displayThread(void)
 			SDL_WINDOW_RESIZABLE);
 
 	renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-	texture = SDL_CreateTexture(renderer,SDL_PIXELFORMAT_YUY2,SDL_TEXTUREACCESS_STREAMING,
-			serverConfig->capture.width,serverConfig->capture.height);
+	texture = SDL_CreateTexture(renderer,
+			SDL_PIXELFORMAT_YUY2,
+			SDL_TEXTUREACCESS_STREAMING,
+			serverConfig->capture.width,
+			serverConfig->capture.height);
 
 	while (!KillDisplayThread) {
 		SDL_Event e;
@@ -55,12 +58,18 @@ void *displayThread(void)
 			}
 		}
 		if(serverConfig->enable_osd_thread) {
-			SDL_UpdateTexture(texture,0,serverConfig->disp.display_frame,serverConfig->capture.width*BPP);
+			SDL_UpdateTexture(texture,0,
+					serverConfig->disp.display_frame,
+					serverConfig->capture.width*BPP);
 		} else {
 			if(serverConfig->algo_type) {
-				SDL_UpdateTexture(texture,0,serverConfig->disp.sdl_frame,serverConfig->capture.width*BPP);
+				SDL_UpdateTexture(texture,0,
+						serverConfig->disp.sdl_frame,
+						serverConfig->capture.width*BPP);
 			} else {
-				SDL_UpdateTexture(texture,0,serverConfig->disp.display_frame,serverConfig->capture.width*BPP);
+				SDL_UpdateTexture(texture,0,
+						serverConfig->disp.display_frame,
+						serverConfig->capture.width*BPP);
 			}
 		}
 		SDL_RenderClear(renderer);
