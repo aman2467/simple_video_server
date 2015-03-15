@@ -30,3 +30,27 @@
 		enable - > to enable osd on video to be saved
 		disable - > to disble osd on video to be saved
 
+	7. osdwintext <OSD window no.> <text>
+		Arg's:	1. OSD window no -> OSD window between 5 to 9
+				2. text -> text to be displayed over video
+
+	8. osdwinpos <OSD window no.> <X-pos> <Y-pos>
+		Arg's:	1. OSD window no -> OSD window between 4 to 9
+				2. x -> x co-ordinate for the given OSD window
+				3. y -> y co-ordinate for the given OSD window
+
+	9. osdwintrans <OSD window no.> <enable|disable>
+		Arg's:	1. OSD window no -> OSD window between 0 to 9
+				2. enable -> To enable given OSD Window
+			   	   disble -> To disable given OSD Window
+
+	10. clear
+		(to clear the screen)
+
+	11. help
+		(help for command and cli usage)
+
+	12. exit
+		(exits the cli program)
+
+

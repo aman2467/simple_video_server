@@ -67,10 +67,10 @@ void fill_osd_data(char *dest, char *src, int size, int transparency)
 
 	int loop = (size / sizeof(char));
 	for(i = 0; i < loop; ++i) {
-		if((transparency == TRUE) && ((*((char *)psrc)&0xFF) == 0x00)) {
+		if((transparency == TRUE) && ((*((char *)psrc)&0x80) == 0x00)) {
 			/* don't do anything */
 		} else {
-			if(*psrc == 0xff) *psrc = 0x00;
+			if(*psrc == 0xFF) *psrc = 0x00;
 			*((char *)pdest) = *((char *)psrc);
 		}
 		pdest += sizeof(char);

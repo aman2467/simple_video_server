@@ -55,6 +55,7 @@ void CmndOsdOnImage(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdOnVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdWinTrans(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndHelp(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndClearScreen(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndExit(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 
 int sendCommand(int, char *);

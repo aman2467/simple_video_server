@@ -25,6 +25,7 @@
 #define OSD_TEXT_MAX_LENGTH 20 
 #define BPP 2
 #define SER_PORT 2467
+#undef STANDALONE
 
 /***************************************************************************/
 
@@ -68,6 +69,13 @@ enum algotype {
 	ALGO_NONE,
 	ALGO_BW,
 	ALGO_CARTOON,
+	ALGO_STAMP,
+	ALGO_UVSWAP,
+	ALGO_H_MIRROR,
+	ALGO_V_MIRROR,
+	ALGO_MULTI_1,
+	ALGO_MULTI_2,
+	ALGO_MULTI_3,
 };
 
 enum recordtype {

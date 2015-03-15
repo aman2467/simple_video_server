@@ -9,7 +9,7 @@
 	2> Can Imprint OSD over video data.
 		2.1> FIVE OSD-icon window support.
 		2.2> FIVE OSD-text window support.
-		2.3> All properties of each window can be controlled at run-time.                      (Only Enabling/Disabling a window can be controlled at run-time)
+		2.3> All properties of each window can be controlled at run-time.
 		2.4> Database for icons should be provided by user at compile time.                    (Database for text, supports only Uppercase Alphabets for now)
 	Dependencies :	1. OSD data MUST be same format as video data.
 
@@ -36,8 +36,9 @@
 		6.1> Display window can be resizable.
 		6.2> By default window size will be based on capture resolution.
 		6.3> Local display supports all features(ex: with algo, with OSD).
+		6.4> Operations based on keystrokes detection locally.(ex: takesnap, record video, etc)
 
-	7> All features can be controlled locally as well as remotely.                             (Not Implemented for all features, See command_list.txt for details)
+	7> All features can be controlled locally as well as remotely.(See command_list.txt for details)
 		6.1> A separate user-app will be there to communicate with video-server at run-time.
 		6.2> Communication between user-app and video-server will be based on SOCKET comm.
 
@@ -47,9 +48,14 @@
 	9> Can apply Video Algorithms(one or multiple) at run-time on user's choice.
 		8.1> Removing chroma from video.
 		8.2> Cartoonise the video/snapshot.
-		8.3> Thermal equivalent of video.                                                      (Not Implemented)
+		8.3> stamp mode
+		8.4> swapping chroma components
+		8.5> horizontal mirror
+		8.6> vertical mirror
+		8.7> Multi mirror displays
+		8.8> Thermal equivalent of video.                                                      (Not Implemented)
 
 
 # Issues :
 	1> Sometimes frames are repeating on saved video.
-	2> Cartoon algo is not proper.
+	2> Transparency mode for OSD display is not proper.

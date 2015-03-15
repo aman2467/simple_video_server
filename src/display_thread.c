@@ -29,8 +29,8 @@ void *displayThread(void)
 	SDL_Window *win = NULL;
 	SDL_Renderer *renderer = NULL;
 	SDL_Texture *texture = NULL;
-	SDL_Surface *bitmapSurface = NULL;
 	char resolution[20] = {0};
+	int kill = 0;
 	SERVER_CONFIG *serverConfig = GetServerConfig();
 
 	SDL_Init(SDL_INIT_VIDEO);
@@ -55,6 +55,41 @@ void *displayThread(void)
 		if (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
 				break;
+			} else if(e.key.type == SDL_KEYUP) {
+				switch(e.key.keysym.sym) {
+					case SDLK_UP:
+						if(e.key.state == SDL_RELEASED) {
+							serverConfig->algo_type++; 
+							if(serverConfig->algo_type > ALGO_MULTI_3) {
+								serverConfig->algo_type = ALGO_NONE;
+							}
+						}
+						break;
+					case SDLK_DOWN:
+						if(e.key.state == SDL_RELEASED) {
+							serverConfig->algo_type--; 
+							if(serverConfig->algo_type < ALGO_NONE) {
+								serverConfig->algo_type = ALGO_MULTI_3;
+							}
+						}
+						break;
+					case SDLK_c:
+						if(serverConfig->enable_imagesave_thread) {
+							serverConfig->image.type = 0;
+							serverConfig->image.recordenable = TRUE;
+						}
+						break;
+					case SDLK_v:
+						if(serverConfig->enable_videosave_thread) {
+							serverConfig->video.recordenable ^= TRUE;
+						}
+						break;
+					case SDLK_ESCAPE:
+						kill = TRUE;
+					default:
+						break;
+				}
+				if(kill) break;
 			}
 		}
 		if(serverConfig->enable_osd_thread) {

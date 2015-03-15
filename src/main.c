@@ -97,7 +97,7 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 /* algorithm settings */
 	serverConfig->algo_type = ALGO_NONE;
 /* JPEG Param settings */
-	serverConfig->jpeg.quality = 100;
+	serverConfig->jpeg.quality = 300;
 	serverConfig->jpeg.framebuff = NULL;
 /* Capture settings */
 	strcpy(serverConfig->capture.device,"/dev/video0");
@@ -237,6 +237,7 @@ int main(int argc, char **argv)
 		perror("socket");
 		exit(0);
 	}
+#ifndef STANDALONE
 	ser_addr.sin_family=AF_INET;/* domain family is set to ipv4*/
 	ser_addr.sin_port=htons(SER_PORT);
 	ser_addr.sin_addr.s_addr=inet_addr("0.0.0.0");
@@ -248,6 +249,7 @@ int main(int argc, char **argv)
 		perror("bind");
 		exit(0);
 	}
+#endif
 #ifdef _DEBUG
 	pr_dbg(YELLOW"/************************************************************/"NONE"\n");
 	pr_dbg(CYAN"\tCapture Device \t\t:\t"GREEN" %s"NONE"\n", serverConfig->capture.device);
@@ -277,6 +279,7 @@ int main(int argc, char **argv)
 #endif
 
 	while(1) {
+#ifndef STANDALONE
 		memset(userdata,0,30);
 		if((recvfrom(sock_fd,userdata,30,0,(struct sockaddr *)&cli_addr,&clen)) < 0) {
 			perror("recvfrom");
@@ -343,6 +346,7 @@ int main(int argc, char **argv)
 				arg1 = *((int *)data);
 				arg2 = *((int *)(data+4));
 				arg3 = *((int *)(data+8));
+				if(arg1 < 5 && arg2%2 !=0) arg2+=1;
 				if(serverConfig->enable_osd_thread) {
 					set_osd_window_position(arg1,arg2,arg3);
 					ret = 0;
@@ -392,6 +396,7 @@ int main(int argc, char **argv)
 		if((sendto(sock_fd,status,10,0,(const struct sockaddr *)&cli_addr,clen))<0) {
 			perror("sendto");
 		}
+#endif
 		usleep(10);
 	}
 

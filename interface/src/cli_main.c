@@ -17,7 +17,7 @@
 #define TRUE 1
 #define FALSE 0
 
-char prompt[16] = "CLI Prompt:/>> ";
+char prompt[16] = "CLI:/> ";
 char g_video_server_ip[16] = "127.0.0.1";
 
 static char  acCmndLine[CMND_LINE_MAX_LEN + 2]; /* Command Line buffer */
@@ -45,6 +45,7 @@ const  struct  CmndTableEntry_t  asCommand[] = {
 	{"osdonvideo",			USER_CMD,		CmndOsdOnVideo},	
 	{"osdwintrans",			USER_CMD,		CmndOsdWinTrans},	
 	{"help",				USER_CMD,		CmndHelp},
+	{"clear",				USER_CMD,		CmndClearScreen},
 	{"exit",				USER_CMD,		CmndExit},
 	{"$",					DEBUG_CMD,      NULL},   /* Dummy last entry */
 } ;
@@ -190,6 +191,19 @@ void CmndHelp(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
 		}
 	}
 	return;
+}
+
+/**********************************************************************
+ * CmndClearScreen :  This function is called when a Command 'clear' is
+ *			  typed in the CLI prompt. It clears the screen.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndClearScreen(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	system("clear");
 }
 
 /**********************************************************************
@@ -541,7 +555,7 @@ usage:
 void usage(char *name)
 {
 	printf("\nUsage: %s <video_server_ip>",name);
-	printf("\nNote : video_server_ip is optional.\nif used on same system where video server is running\n");
+	printf("\n<video_server_ip> : (Optional) Required for remote access only\n");
 }
 
 /*******************************************
