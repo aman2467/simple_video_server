@@ -41,16 +41,16 @@ CPPFLAGS += -I. \
 		-I./inc/ \
 		-I./interface/inc \
 
-.PHONY: clean app utils video_server
+.PHONY: clean all video_server player cli_app info
 
-all: video_server utils cli_app info
+all: video_server cli_app player info
 
 video_server:
 	${VERBOSE} sed -i "s,PATH,$(DATABASE_DIR),g"  $(BASEDIR)/inc/osd_thread.h
 	${VERBOSE} ${CC} ${SRC_DIR}/*.c ${CFLAGS} ${CPPFLAGS} ${LD_FLAGS} -o ${RELTARGET}
 
-utils:
-	${VERBOSE}gcc ${UTILS_DIR}/UYVY_2_YUYV.c -o ${BIN_DIR}/uyvy2yuyv
+player:
+	${VERBOSE}gcc ${UTILS_DIR}/video_player.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/player
 
 cli_app:
 	${VERBOSE}gcc ${INTERFACE_DIR}/*.c ${CPPFLAGS} -o ${BIN_DIR}/cli_app
