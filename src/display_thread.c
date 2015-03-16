@@ -57,7 +57,7 @@ void *displayThread(void)
 				break;
 			} else if(e.key.type == SDL_KEYUP) {
 				switch(e.key.keysym.sym) {
-					case SDLK_UP:
+					case SDLK_RIGHT:
 						if(e.key.state == SDL_RELEASED) {
 							serverConfig->algo_type++; 
 							if(serverConfig->algo_type > ALGO_MULTI_3) {
@@ -65,7 +65,7 @@ void *displayThread(void)
 							}
 						}
 						break;
-					case SDLK_DOWN:
+					case SDLK_LEFT:
 						if(e.key.state == SDL_RELEASED) {
 							serverConfig->algo_type--; 
 							if(serverConfig->algo_type < ALGO_NONE) {
@@ -107,6 +107,7 @@ void *displayThread(void)
 						serverConfig->capture.width*BPP);
 			}
 		}
+		usleep(25000);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);

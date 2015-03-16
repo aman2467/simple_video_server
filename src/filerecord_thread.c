@@ -71,7 +71,7 @@ void *filerecordThread(void)
 
 	while(!KillFilerecordThread) {
 		while(!g_writeflag) {
-			usleep(5);
+			usleep(20);
 		}
 		if(serverConfig->video.recordenable == TRUE) {
 			get_video_filename(filename,serverConfig->video.type);
@@ -102,6 +102,7 @@ void *filerecordThread(void)
 		g_writeflag = FALSE;
 		i++;
 		if(i > 9) i = 1;
+		usleep(20);
 	}
 	return 0;
 }

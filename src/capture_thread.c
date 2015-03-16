@@ -182,6 +182,7 @@ void *captureThread(void)
 			perror("VIDIOC_QBUF");
 			return NULL;
 		}
+		usleep(10);
 	}
 	return 0;
 }

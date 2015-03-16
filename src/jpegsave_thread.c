@@ -151,7 +151,7 @@ void *jpegsaveThread(void)
 
 	while(!KillJpegsaveThread) {
 		while(serverConfig->jpeg.framebuff == NULL) {
-			usleep(5);
+			usleep(100);
 		}
 
 		get_image_filename(outfile,serverConfig->image.type);
