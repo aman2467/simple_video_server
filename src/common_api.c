@@ -122,8 +122,44 @@ void set_osd_window_transparency(int window, int enable)
  * @return     : void
  * *************************************************************************/
 void update_osd_window(int window)
-{
+{	
+	DATE_TIME cur;
+	SERVER_CONFIG *serverConfig = GetServerConfig();
+	char str[20] = {0};
 
-
+	if(!serverConfig->osdwin[window].enable) {
+		return;
+	}
+	switch(window)
+	{
+		case OSD_WINDOW_THREE:/*display tux*/
+			serverConfig->osdwin[window].y = serverConfig->capture.height-serverConfig->osdwin[window].height-10;
+			break;
+		case OSD_WINDOW_EIGHT:/*display time*/
+			getcurrenttime(&cur);
+			if(cur.hour > 12) {
+				snprintf(str,OSD_TEXT_MAX_LENGTH,
+						"TIME:%02d:%02d:%02dPM", cur.hour-12, cur.min, cur.sec);
+			} else {
+				snprintf(str,OSD_TEXT_MAX_LENGTH,
+						"TIME:%02d:%02d:%02dAM", cur.hour, cur.min, cur.sec);
+			}
+			strcpy(serverConfig->osdwin[window].osdtext, str);
+			serverConfig->osdwin[window].x = serverConfig->capture.width-OSD_TEXT_MAX_LENGTH*TEXT_WIDTH-10;
+			serverConfig->osdwin[window].y = serverConfig->capture.height-2*TEXT_HEIGHT-12;
+			serverConfig->osdwin[window].width = TEXT_WIDTH*strlen(serverConfig->osdwin[window].osdtext);
+			break;
+		case OSD_WINDOW_NINE:/*display date*/
+			getcurrenttime(&cur);
+			snprintf(str,OSD_TEXT_MAX_LENGTH,
+					"DATE:%02d-%02d-%04d", cur.day, cur.mon, cur.year);
+			strcpy(serverConfig->osdwin[window].osdtext, str);
+			serverConfig->osdwin[window].x = serverConfig->capture.width-OSD_TEXT_MAX_LENGTH*TEXT_WIDTH-10;
+			serverConfig->osdwin[window].y = serverConfig->capture.height-TEXT_HEIGHT-10;
+			serverConfig->osdwin[window].width = TEXT_WIDTH*strlen(serverConfig->osdwin[window].osdtext);
+			break;
+		default :
+			break;
+	}
 }
 

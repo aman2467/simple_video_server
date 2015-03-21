@@ -38,11 +38,11 @@ int osd_init(char *osd)
 	if(fp == NULL) printf("fail\n");
 	if(fread(ascii_data,1,STRING_WIDTH*TEXT_HEIGHT*BPP,fp) != STRING_WIDTH*TEXT_HEIGHT*BPP);
 	fclose(fp);
-	if((ascii_string = calloc(78,1)) == NULL) {
+	if((ascii_string = calloc(91,1)) == NULL) {
 		printf("Memory not allocated to OSD\n");
 		return FAIL;
 	}
-	memcpy(ascii_string,ASCII_STRING,77);
+	memcpy(ascii_string,ASCII_STRING,90);
 	if((osd = calloc(400*400*2,1)) == NULL) {
 		printf("Memory not allocated to OSD\n");
 		return FAIL;
@@ -69,8 +69,12 @@ void fill_osd_data(char *dest, char *src, int size, int transparency)
 	for(i = 0; i < loop; ++i) {
 		if((transparency == TRUE) && ((*((char *)psrc)&0x80) == 0x00)) {
 			/* don't do anything */
+			if(*psrc <= 0x20) {
+				pdest += sizeof(char);
+				psrc += sizeof(char);
+				++i;
+			}
 		} else {
-			if(*psrc == 0xFF) *psrc = 0x00;
 			*((char *)pdest) = *((char *)psrc);
 		}
 		pdest += sizeof(char);

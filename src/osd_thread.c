@@ -65,12 +65,12 @@ void init_OSDWindows(void)
 				strcpy(serverConfig->osdwin[window].file,OSD_DATABASE"/win_2.yuyv");
 				break;
 			case OSD_WINDOW_THREE:
-				serverConfig->osdwin[window].enable = FALSE;
+				serverConfig->osdwin[window].enable = TRUE;
 				serverConfig->osdwin[window].x = OSD_WINDOW_THREE_X;
 				serverConfig->osdwin[window].y = OSD_WINDOW_THREE_Y;
 				serverConfig->osdwin[window].width = OSD_WINDOW_THREE_W;
 				serverConfig->osdwin[window].height = OSD_WINDOW_THREE_H;
-				serverConfig->osdwin[window].transparency = FALSE;
+				serverConfig->osdwin[window].transparency = TRUE;
 				strcpy(serverConfig->osdwin[window].file,OSD_DATABASE"/win_3.yuyv");
 				break;
 			case OSD_WINDOW_FOUR:
@@ -79,7 +79,7 @@ void init_OSDWindows(void)
 				serverConfig->osdwin[window].y = OSD_WINDOW_FOUR_Y;
 				serverConfig->osdwin[window].width = OSD_WINDOW_FOUR_W;
 				serverConfig->osdwin[window].height = OSD_WINDOW_FOUR_H;
-				serverConfig->osdwin[window].transparency = FALSE;
+				serverConfig->osdwin[window].transparency = TRUE;
 				strcpy(serverConfig->osdwin[window].file,OSD_DATABASE"/win_4.yuyv");
 				break;
 			/* Text Window */

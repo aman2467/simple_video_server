@@ -19,18 +19,18 @@
 #define OSD_WINDOW_ZERO 0
 #define OSD_WINDOW_ONE 1
 #define OSD_WINDOW_TWO 2
-#define OSD_WINDOW_THREE 3
+#define OSD_WINDOW_THREE 3		/* TUX LOGO */
 #define OSD_WINDOW_FOUR 4
 #define OSD_WINDOW_FIVE 5
 #define OSD_WINDOW_SIX 6
 #define OSD_WINDOW_SEVEN 7
-#define OSD_WINDOW_EIGHT 8
-#define OSD_WINDOW_NINE 9
+#define OSD_WINDOW_EIGHT 8		/* TIME */
+#define OSD_WINDOW_NINE 9		/* DATE */
 
 #define OSD_DATABASE "PATH"
 #define TEXT_WIDTH 10
 #define TEXT_HEIGHT 16
-#define STRING_WIDTH 770
+#define STRING_WIDTH 900
 
 /* Icon Windows */
 #define OSD_WINDOW_ZERO_X 10
@@ -48,15 +48,15 @@
 #define OSD_WINDOW_TWO_W 60
 #define OSD_WINDOW_TWO_H 40
 
-#define OSD_WINDOW_THREE_X 680
-#define OSD_WINDOW_THREE_Y 366
-#define OSD_WINDOW_THREE_W 60
-#define OSD_WINDOW_THREE_H 40
+#define OSD_WINDOW_THREE_X 10
+#define OSD_WINDOW_THREE_Y 422
+#define OSD_WINDOW_THREE_W 40
+#define OSD_WINDOW_THREE_H 48
 
-#define OSD_WINDOW_FOUR_X 80
-#define OSD_WINDOW_FOUR_Y 66
-#define OSD_WINDOW_FOUR_W 60
-#define OSD_WINDOW_FOUR_H 40
+#define OSD_WINDOW_FOUR_X 256
+#define OSD_WINDOW_FOUR_Y 176
+#define OSD_WINDOW_FOUR_W 128
+#define OSD_WINDOW_FOUR_H 128
 
 /* Text Windows */
 #define OSD_WINDOW_FIVE_X 0
@@ -94,7 +94,7 @@
 #define OSD_WINDOW_NINE_W TEXT_WIDTH*OSD_WINDOW_NINE_STR_LEN
 #define OSD_WINDOW_NINE_H TEXT_HEIGHT
 
-#define ASCII_STRING "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:; '/\\+-_()&$#,"
+#define ASCII_STRING "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789:; '/\\+-=_()*&^%$#@!,.?|{}[]"
 
 int osd_init(char *);
 void fill_osd_data(char *,char *, int, int);
