@@ -10,7 +10,7 @@
 		2.1> FIVE OSD-icon window support.
 		2.2> FIVE OSD-text window support.
 		2.3> All properties of each window can be controlled at run-time.
-		2.4> Database for icons should be provided by user at compile time.                    (Database for text, supports only Uppercase Alphabets for now)
+		2.4> Database for icons should be provided by user at compile time.
 	Dependencies :	1. OSD data MUST be same format as video data.
 
 	3> Can record video locally.
@@ -58,4 +58,3 @@
 
 # Issues :
 	1> Sometimes frames are repeating on saved video.
-	2> Transparency mode for OSD display is not proper.
