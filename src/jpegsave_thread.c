@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <jpeglib.h>
 #include <common.h>
+#include <pwd.h>
 
 /****************************************************************************
  * @func    : saves a jpeg frame
@@ -114,25 +115,33 @@ unsigned char* yuyv2rgb(unsigned char* yuyv, unsigned int width, unsigned int he
 void get_image_filename(char *name, int val)
 {
 	DATE_TIME current;
+	char path[50] = {0};
+	char cmd[100] = {0};
+	struct passwd *pwd;
 
 	getcurrenttime(&current);
-	if(system("mkdir -p records") < 0) {
-		printf("Fail to create 'records' directory\n");
+	pwd = getpwuid(getuid());
+
+	if(pwd) {
+		strcpy(path,pwd->pw_dir);	
 	}
-	if(system("mkdir -p records/images") < 0) {
-		printf("Fail to create 'records/images' directory\n");
+	snprintf(cmd,100,"mkdir -p %s/Pictures/svs",path);
+	if(system(cmd) < 0) {
+		printf("Fail to create 'svs' directory\n");
 	}
 	if(val == 0) {
-		snprintf(name,50,"records/images/jpeg/IMG_%d%d%d_%d%d%d.jpg", current.year, current.mon,
+		snprintf(name,100,"%s/Pictures/svs/jpeg/IMG_%d%d%d_%d%d%d.jpg", path, current.year, current.mon,
 			current.day, current.hour, current.min, current.sec);
-		if(system("mkdir -p records/images/jpeg") < 0) {
+		strcat(cmd,"/jpeg");
+		if(system(cmd) < 0) {
 			printf("Fail to create 'records/images/jpeg' directory\n");
 		}
 	} else if(val == 1) {
-		snprintf(name,50,"records/images/raw/IMG_%d%d%d_%d%d%d.raw", current.year, current.mon,
+		snprintf(name,100,"%s/Pictures/svs/raw/IMG_%d%d%d_%d%d%d.raw", path, current.year, current.mon,
 			current.day, current.hour, current.min, current.sec);
-		if(system("mkdir -p records/images/raw") < 0) {
-			printf("Fail to create 'records/images/raw' directory\n");
+		strcat(cmd,"/raw");
+		if(system(cmd) < 0) {
+			printf("Fail to create 'Pictures/svs/raw' directory\n");
 		}
 	}
 }
@@ -145,7 +154,7 @@ void get_image_filename(char *name, int val)
 void *jpegsaveThread(void)
 {
 	unsigned char* rgb;
-	char outfile[50] = {0};
+	char outfile[100] = {0};
 	FILE *fp;
 	SERVER_CONFIG *serverConfig = GetServerConfig();
 

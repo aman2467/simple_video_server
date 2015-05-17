@@ -13,10 +13,12 @@
  * ========================================================================*/
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <common.h>
+#include <pwd.h>
 
 extern char *g_framebuff[NUM_BUFFER];
 extern char *g_osdbuff[NUM_BUFFER];
@@ -32,25 +34,33 @@ extern int g_writeflag;
 void get_video_filename(char *name, int val)
 {
 	DATE_TIME current;
+	char path[50] = {0};
+	char cmd[100] = {0};
+	struct passwd *pwd;
 
 	getcurrenttime(&current);
-	if(system("mkdir -p records") < 0) {
-		printf("Fail to create 'records' directory\n");
+	pwd = getpwuid(getuid());
+
+	if(pwd) {
+		strcpy(path,pwd->pw_dir);	
 	}
-	if(system("mkdir -p records/videos") < 0) {
-		printf("Fail to create 'records/videos' directory\n");
+	snprintf(cmd,100,"mkdir -p %s/Videos/svs",path);
+	if(system(cmd) < 0) {
+		printf("Fail to create 'svs' directory\n");
 	}
 	if(val == 0) {
-		snprintf(name,50,"records/videos/raw/VID_%d%d%d_%d%d%d.raw", current.year, current.mon,
+		snprintf(name,100,"%s/Videos/svs/raw/VID_%d%d%d_%d%d%d.raw", path, current.year, current.mon,
 			current.day, current.hour, current.min, current.sec);
-		if(system("mkdir -p records/videos/raw") < 0) {
-			printf("Fail to create 'records/videos/raw' directory\n");
+		strcat(cmd,"/raw");
+		if(system(cmd) < 0) {
+			printf("Fail to create 'svs/raw' directory\n");
 		}
 	} else if(val == 1){
-		snprintf(name,50,"records/videos/h264/VID_%d%d%d_%d%d%d.h264", current.year, current.mon,
+		snprintf(name,100,"%s/Videos/svs/h264/VID_%d%d%d_%d%d%d.h264", path, current.year, current.mon,
 			current.day, current.hour, current.min, current.sec);
-		if(system("mkdir -p records/videos/h264") < 0) {
-			printf("Fail to create 'records/videos/h264' directory\n");
+		strcat(cmd,"/h264");
+		if(system(cmd) < 0) {
+			printf("Fail to create 'svs/h264' directory\n");
 		}
 	}
 }
@@ -65,13 +75,13 @@ void *filerecordThread(void)
 {
 	int i = 0;
 	FILE *fp;
-	char filename[50];
+	char filename[100];
 
 	SERVER_CONFIG *serverConfig = GetServerConfig();
 
 	while(!KillFilerecordThread) {
 		while(!g_writeflag) {
-			usleep(20);
+			usleep(50);
 		}
 		if(serverConfig->video.recordenable == TRUE) {
 			get_video_filename(filename,serverConfig->video.type);
@@ -102,7 +112,6 @@ void *filerecordThread(void)
 		g_writeflag = FALSE;
 		i++;
 		if(i > 9) i = 1;
-		usleep(20);
 	}
 	return 0;
 }

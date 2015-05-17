@@ -107,7 +107,7 @@ void *displayThread(void)
 						serverConfig->capture.width*BPP);
 			}
 		}
-		usleep(25000);
+		usleep(30000);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
@@ -118,6 +118,6 @@ void *displayThread(void)
 	SDL_DestroyWindow(win);
 
 	SDL_Quit();
-
+	exit(0);
 	return 0;
 }

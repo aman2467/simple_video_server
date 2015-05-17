@@ -38,7 +38,7 @@ int main(int argc, char **argv )
 	int fps = 0, delay = 0;
 
 	if(argc != 5) {
-		printf("Usage: %s <YUY2_file.raw> <width> <height> <fps>",argv[0]);
+		printf("Usage: %s <YUY2_file.raw> <width> <height> <fps>\n",argv[0]);
 		exit(0);
 	}
 	SDL_Init(SDL_INIT_VIDEO);

@@ -1,5 +1,5 @@
 gh-pages
-cscope.*
+*cscope*
 tags*
 *.svn
 
