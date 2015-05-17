@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=video_server
+Exec=/usr/local/bin/video_server
+Terminal=false
+Type=Application
+Icon=/usr/share/svs/logo.png
+StartupNotify=true

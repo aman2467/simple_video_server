@@ -73,3 +73,9 @@ info:
 	${VERBOSE}echo " "
 	${VERBOSE}echo "${CYAN}========================================================================================"
 	${VERBOSE}echo " "
+
+install:
+	${VERBOSE}sudo mkdir -p /usr/share/svs
+	${VERBOSE}sudo cp ${DATABASE_DIR}/logo.png /usr/share/svs/
+	${VERBOSE}sudo cp ${BIN_DIR}/${TARGET} /usr/local/bin/
+	${VERBOSE}sudo cp ${TARGET}.desktop /usr/share/applications/
