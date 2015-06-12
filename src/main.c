@@ -72,7 +72,7 @@ void usage(char *exename)
 	printf(GREEN"\t\tosd              "NONE":"YELLOW" To enable OSD\n");
 	printf(GREEN"\t\tvideosave        "NONE":"YELLOW" To enable video save\n");
 	printf(GREEN"\t\timagesave        "NONE":"YELLOW" To enable snapshot save\n");
-	printf(GREEN"\t\tdispaly          "NONE":"YELLOW" To enable local display\n");
+	printf(GREEN"\t\tdisplay          "NONE":"YELLOW" To enable local display\n");
 	printf(GREEN"\t\t-d <device>      "NONE":"YELLOW" To capture video from given device\n");
 	printf(GREEN"\t\t-w <width>       "NONE":"YELLOW" Supported capture width\n");
 	printf(GREEN"\t\t-h <height>      "NONE":"YELLOW" Supported capture height"NONE"\n");
