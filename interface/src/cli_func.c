@@ -19,11 +19,47 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <string.h>
+#include <stdlib.h>
 #include <errno.h>
 #include <cli_app.h>
 #include <command_list.h>
 
 extern char g_video_server_ip[16];
+extern int quit_flag;
+
+/****************************************************************************
+ * @usage : Called when SIGALRM signal is received, terminates the program
+ *
+ * @arg	: signal number
+ * @return     : void
+ * *************************************************************************/
+void watchdog(int sig)
+{
+	char server_msg[] = "\nVideo Server Not Alive";
+	char exit_msg[] = "\nTerminating Application...";
+	char *ch;
+
+	if(quit_flag == TRUE) {
+		ch = server_msg;
+		while(*ch != '\0') {
+			printf("\x1b[01;32m%c",*ch);
+			fflush(stdout);
+			usleep(100000);
+			ch++;
+		}
+		sleep(2);
+		ch = exit_msg;
+		while(*ch != '\0') {
+			printf("\x1b[01;31m%c",*ch);
+			fflush(stdout);
+			usleep(100000);
+			ch++;
+		}
+		sleep(2);
+		printf("\x1b[0m\n");
+		exit(0);
+	}
+}
 
 /****************************************************************************
  * @usage : This function sends a command to video server using UDP socket.
@@ -56,7 +92,8 @@ int sendCommand(int command, char *arg)
     /* sending message to the server*/
 	memcpy(wrbuff,&command,sizeof(int));
 	memcpy(wrbuff+4,arg,26);
-
+	quit_flag = TRUE;
+	alarm(WAIT_TIME);
 	if((sendto(sock_fd,wrbuff,30,0,(const struct sockaddr *)&ser_addr,slen))<0) {
         perror("sendto");
         return FAILURE;
@@ -69,6 +106,7 @@ int sendCommand(int command, char *arg)
 	if(strcmp(status,"UNKNOWN") == 0) {
 		strcat(response," SERVICE");
 	}
+	quit_flag = FALSE;
 	printf("\nServer(%s) message : %s\n",inet_ntoa(ser_addr.sin_addr),response);
     close(sock_fd);/*closing socket*/
 	return SUCCESS;

@@ -31,6 +31,11 @@
 #define FAILURE -1
 #define SUCCESS 0
 
+#define TRUE 1
+#define FALSE 0
+
+#define WAIT_TIME 3
+
 typedef  void (*CLIfunc)(UINT16 argc, char *argv[]);      /* pointer to CLI function */
 
 /* Command table entry looks like this */
@@ -68,5 +73,6 @@ int osdwinpos(int, int, int);
 int osdonimage(int);
 int osdonvideo(int);
 int osdwintrans(int, int);
+void watchdog(int);
 
 #endif

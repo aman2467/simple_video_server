@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <ctype.h>
 #include <stdio_ext.h>
 #include <cli_app.h>
@@ -19,6 +20,7 @@
 
 char prompt[16] = "CLI:/> ";
 char g_video_server_ip[16] = "127.0.0.1";
+int quit_flag = FALSE;
 
 static char  acCmndLine[CMND_LINE_MAX_LEN + 2]; /* Command Line buffer */
 static char  *pcCmndLinePtr;	/* Pointer into Cmnd Line buffer */
@@ -578,6 +580,7 @@ int main(int argc, char **argv)
 		strcpy(g_video_server_ip,argv[1]);
 	}
 
+	signal(SIGALRM, watchdog);
 	while (1) {
 		printf("%s", prompt);
 		scanf("%[^\n]", acCmndLine);
