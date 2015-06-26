@@ -35,6 +35,7 @@ extern int g_osdflag;
 extern int g_writeflag;
 extern char *g_framebuff[NUM_BUFFER];
 extern int current_task;
+extern lock_t buf_lock;
 
 /****************************************************************************
  * @function : This is the capture thread main function. It captures video frames
@@ -152,7 +153,9 @@ void *captureThread(void)
 			return NULL;
 		}
 		frame_cnt++;
+		lock(&buf_lock);
 		memcpy(g_framebuff[i],buffers[buf.index].start,serverConfig->capture.framesize);
+		unlock(&buf_lock);
 		if(!serverConfig->enable_osd_thread) {
 			if(serverConfig->enable_display_thread) {
 				memcpy(serverConfig->disp.display_frame,buffers[buf.index].start,serverConfig->capture.framesize);
@@ -166,7 +169,9 @@ void *captureThread(void)
 			if(serverConfig->image.recordenable) {
 				serverConfig->image.recordenable = FALSE;
 				serverConfig->jpeg.framebuff = calloc(serverConfig->capture.framesize, 1);
+				lock(&buf_lock);
 				memcpy(serverConfig->jpeg.framebuff,g_framebuff[i],serverConfig->capture.framesize);
+				unlock(&buf_lock);
 			}
 		}
 		if(serverConfig->enable_osd_thread) {

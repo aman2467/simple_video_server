@@ -38,6 +38,7 @@ char *ascii_string;
 char ascii_data[STRING_WIDTH*TEXT_HEIGHT*TEXT_WIDTH*BPP];
 
 int current_task;
+lock_t buf_lock;
 SERVER_CONFIG g_server_config;
 
 extern void *captureThread(void *);
@@ -169,6 +170,7 @@ int main(int argc, char **argv)
 		}
 	}
 
+	lock_init(&buf_lock);
 	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
 	if(serverConfig->enable_display_thread) {
 		if(!serverConfig->enable_osd_thread) {

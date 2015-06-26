@@ -55,6 +55,3 @@
 		9.7> Multi mirror displays
 		9.8> Thermal equivalent of video.                                                      (Not Implemented)
 
-
-# Issues :
-	1> Sometimes frames are repeating on saved video.

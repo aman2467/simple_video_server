@@ -23,6 +23,7 @@
 extern char *g_framebuff[NUM_BUFFER];
 extern char *g_osdbuff[NUM_BUFFER];
 extern int g_writeflag;
+extern lock_t buf_lock;
 
 /****************************************************************************
  * @usage : This function creates a file name based on timestamp.
@@ -97,14 +98,16 @@ void *filerecordThread(void)
 						continue;
 					}
 				} else {
+					lock(&buf_lock);
 					apply_algo(g_framebuff[i],serverConfig->algo_type);
 					if(fwrite(g_framebuff[i],serverConfig->capture.framesize, 1, fp) < 0) {
 						perror("WRITE");
 						continue;
 					}
+					unlock(&buf_lock);
 				}
 				i++;
-				if(i > 9) i = 1;
+				if(i > 9) i = 0;
 				g_writeflag = FALSE;
 			}
 			fclose(fp);
