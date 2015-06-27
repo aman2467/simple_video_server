@@ -75,7 +75,7 @@ info:
 	${VERBOSE}echo " "
 
 install:
-	${VERBOSE}sudo mkdir -p /usr/share/svs
-	${VERBOSE}sudo cp ${UTILS_DIR}/logo.png /usr/share/svs/
-	${VERBOSE}sudo cp ${BIN_DIR}/${TARGET} /usr/local/bin/
-	${VERBOSE}sudo cp ${TARGET}.desktop /usr/share/applications/
+	${VERBOSE}mkdir -p /usr/share/svs
+	${VERBOSE}cp ${UTILS_DIR}/logo.png /usr/share/svs/
+	${VERBOSE}cp ${BIN_DIR}/${TARGET} /usr/local/bin/
+	${VERBOSE}cp ${TARGET}.desktop /usr/share/applications/

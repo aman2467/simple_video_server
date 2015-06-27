@@ -13,7 +13,7 @@ Dependencies
 Build and Installation
 ----------------------
 	> make
-	> make install
+	> make install	(sudo may required)
 
 	> After this bin/ directory should contain following binaries:
 		1. video_server	:	video server application, this will be installed 
