@@ -27,7 +27,8 @@ INTERFACE_DIR=$(BASEDIR)/interface/src
 DATABASE_DIR=${BASEDIR}/database
 BIN_DIR=$(BASEDIR)/bin
 LIB_DIR=$(BASEDIR)/lib
-UTILS_DIR=$(BASEDIR)/tools
+TOOLS_DIR=$(BASEDIR)/tools
+UTILS_DIR=$(BASEDIR)/utils
 SOURCES = $(wildcard *.c)
 HEADERS = $(wildcard *.h)
 RELTARGET=$(BIN_DIR)/$(TARGET)
@@ -49,7 +50,7 @@ video_server:
 	${VERBOSE} ${CC} ${SRC_DIR}/*.c ${CFLAGS} ${CPPFLAGS} ${LD_FLAGS} -o ${RELTARGET}
 
 player:
-	${VERBOSE}gcc ${UTILS_DIR}/test_player.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/test_player
+	${VERBOSE}gcc ${TOOLS_DIR}/test_player.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/test_player
 
 cli_app:
 	${VERBOSE}gcc ${INTERFACE_DIR}/*.c ${CPPFLAGS} -o ${BIN_DIR}/cli_app
@@ -75,6 +76,6 @@ info:
 
 install:
 	${VERBOSE}sudo mkdir -p /usr/share/svs
-	${VERBOSE}sudo cp ${DATABASE_DIR}/logo.png /usr/share/svs/
+	${VERBOSE}sudo cp ${UTILS_DIR}/logo.png /usr/share/svs/
 	${VERBOSE}sudo cp ${BIN_DIR}/${TARGET} /usr/local/bin/
 	${VERBOSE}sudo cp ${TARGET}.desktop /usr/share/applications/
