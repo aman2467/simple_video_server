@@ -18,34 +18,36 @@
 		3.2> Option to save with or without OSD data at run-time, enable by default.
 		3.3> File can be recorded as RAW or ENCODED(ex: h.264).         			           (Not Implemented, only Raw can be recorded)
 		3.4> File saving will be on basis of time-stamp.
-		3.5> File recording will happen only on user's request.
+		3.5> File recording start/stop only on user's request.
 	Dependencies :	No.
 
 	4> Can save JPEG snapshot locally.
-		4.1> Option to save with or without OSD data at run-time, enable by default.
-		4.2> Snapshot will be taken only on user's request.
-		4.3> File saving will be on basis of time-stamp.
+		4.1> Option to save with or without OSD data at run-time, OSD-enable by default.
+		4.2> Snapshot can be taken only on user's request.
+		4.3> Filename is based on current time-stamp.
 		4.4> File type can be RAW or JPEG, based on user's choice.
 	Dependencies :	No.
 
 	5> Can transmit video data over network.                                                   (Not Implemented)
 		5.1> Video can either be RAW or ENCODED as per user's choice.
-		5.2> Only single stream will be available.
+		5.2> Only single stream is available.
 
 	6> Can display captured video Locally.
 		6.1> Display window can be resizable.
-		6.2> By default window size will be based on capture resolution.
+		6.2> By default window size is based on capture resolution.
 		6.3> Local display supports all features(ex: with algo, with OSD).
 		6.4> Operations based on keystrokes detection locally.(ex: takesnap, record video, etc)
+		6.5> c->to capture a JPEG snapshot, v-> toggle to start/stop raw video recording
+		6.6> right/left arrow to apply different algorithms, Esc-> to quit application.
 
 	7> All features can be controlled locally as well as remotely.(See command_list.txt for details)
-		7.1> A separate user-app will be there to communicate with video-server at run-time.
-		7.2> Communication between user-app and video-server will be based on SOCKET comm.
+		7.1> A separate user-app is available to communicate with video-server at run-time.
+		7.2> Communication between user-app and video-server is based on SOCKET comm.
 
 	8> Features with video-server will run, can be controlled by user at load-time.
 		8.1> Any feature from video pipeline can be removed at load-time.
 
-	9> Can apply Video Algorithms(one or multiple) at run-time on user's choice.
+	9> Can apply Video Algorithms(one at a time) at run-time on user's choice.
 		9.1> Removing chroma from video.
 		9.2> Cartoonise the video/snapshot.
 		9.3> stamp mode
@@ -54,4 +56,3 @@
 		9.6> vertical mirror
 		9.7> Multi mirror displays
 		9.8> Thermal equivalent of video.                                                      (Not Implemented)
-
