@@ -1,89 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+<head>
+<meta charset='utf-8'>
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+<link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+<link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+<title>Simple Video Server</title>
+</head>
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>Simple video server</title>
-  </head>
-
-  <body>
-    <header>
-      <div class="inner">
-        <h1>Video Server</h1>
-        <h2>A simple video server, written in C using linux&#39;s v4l2 capture. It also performs few tasks over video. ex- OSD imprint, saving a JPEG snapshot, etc.</h2>
-        <a href="https://github.com/aman2467/simple_video_server" class="button"><small>Check project on</small> GitHub<img src="images/tux_egg.png" width="40px" height="40px" style="float:right;"></img></a>
-      </div>
-    </header>
-
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h3>
-<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to 'Simple video server' page.</h3>
-
-<p>From here, you can download the source-code as tar or zip file. Also you can check the code on the git-repository as well. To clone this code, follow this:</p>
-
+<body>
+<header>
+<div class="inner">
+<h1>Video-Server</h1>
+<h2>A simple video server, written in C based on linux&#39;s V4l2 framework.</h2>
+<a href="https://github.com/aman2467/simple_video_server" class="button"><small>Check project on</small> GitHub<img src="images/tux_egg.png" width="40px" height="40px" style="float:right;"></img></a>
+</div>
+</header>
+<div id="content-wrapper">
+<div class="inner clearfix">
+<section id="main-content">
+<h3><a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simple_video_server page.</h3>
+<p>From here, source-code can be downloaded as a tar or zip file. Code can also be viewed on the git-repository as well. To clone this code, follow this:</p>
 <pre><code>$ cd any_directory_you_want
 $ git clone https://github.com/aman2467/simple_video_server.git
 </code></pre>
-
-<h3>
-<a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Important Notes</h3>
+<h3><a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Important Notes</h3>
 <p>
-&#9775 Click<a href="https://github.com/aman2467/simple_video_server/blob/master/docs/video_server_features.txt"> here </a> to know more about this video server.<br>
-&#9775 All listed features is not added at the time.<br>
-&#9775 A separate <a href="https://github.com/aman2467/simple_video_server/blob/master/interface"><i>cli_app</i></a> is available to control video-server at run-time.<br>
-&#9775 A <a href="https://github.com/aman2467/simple_video_server/blob/master/tools/video_player.c"><i>raw-video player</i></a> is added to test recorded video using video_server.<br>
-&#9775 Other listed <a href="https://github.com/aman2467/simple_video_server/blob/master/docs/video_server_features.txt"><i>features</i></a> will be added soon... :)<br>
+&#9775 Click<a href="https://github.com/aman2467/simple_video_server/blob/master/docs/video_server_features.txt"> here </a> to know the features of video server.<br>
+&#9775 A separate <a href="https://github.com/aman2467/simple_video_server/blob/master/interface">cli_app</a> is available to communicate with video-server at run-time.<br>
+&#9775 A <a href="https://github.com/aman2467/simple_video_server/blob/master/tools/test_player.c">test-player</a> is also added to verify the correctness of recorded video/image.<br>
 </p>
-
-<h3>
-<a id="rather-drive-stick" class="anchor" href="#rather-drive-stick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other Repositories</h3>
-
+<h3><a id="rather-drive-stick" class="anchor" href="#rather-drive-stick" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other Repositories</h3>
 <p>
 &#8984 Linux console based simple <a href="http://aman2467.github.io/games">games</a> written in C.<br>
 &#8984 Simple <a href="http://aman2467.github.io/paint_brush">paint-brush</a> example written in C using SDL2.<br>
 &#8984 <a href="http://aman2467.github.io/raw_video_player">Raw video player</a> written in C for Linux platform.<br>
 &#8984 A simple <a href="http://aman2467.github.io/Face-detection-using-opencv">face detection</a> program written in C++ using opencv.<br>
 </p>
-<!--
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="https://help.github.com/pages">https://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
--->
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/aman2467/simple_video_server/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/aman2467/simple_video_server/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/aman2467/simple_video_server">This Code</a> is maintained by <a href="https://github.com/aman2467">Aman</a>.</p>
-        </aside>
-      </div>
-    </div>
-
-  
-  </body>
+</section>
+<aside id="sidebar">
+<a href="https://github.com/aman2467/simple_video_server/zipball/master" class="button">
+<small>Download</small>
+.zip file
+</a>
+<a href="https://github.com/aman2467/simple_video_server/tarball/master" class="button">
+<small>Download</small>
+.tar.gz file
+</a>
+<p class="repo-owner">This Code is maintained by <a href="https://github.com/aman2467">Aman</a></p>
+</aside>
+</div>
+</div>
+</body>
 </html>
