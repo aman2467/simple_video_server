@@ -1,5 +1,5 @@
 
-# Video-server(no audio) features:                                                             # Comments :
+# Video-server(no audio) features:
 
 	1> Can capture video data using V4L2.
 		1.1> can capture from provided device at load-time.
@@ -14,9 +14,9 @@
 	Dependencies :	1. OSD data MUST be same format as video data.
 
 	3> Can record video locally.
-		3.1> Option to select record type at run-time.                  			           (Not Implemented, by default Raw only)
+		3.1> Option to select record type at run-time.(Not Implemented, by default Raw only)
 		3.2> Option to save with or without OSD data at run-time, enable by default.
-		3.3> File can be recorded as RAW or ENCODED(ex: h.264).         			           (Not Implemented, only Raw can be recorded)
+		3.3> File can be recorded as RAW or ENCODED(ex: h.264).(Not Implemented, only Raw can be recorded)
 		3.4> File saving will be on basis of time-stamp.
 		3.5> File recording start/stop only on user's request.
 	Dependencies :	No.
@@ -28,7 +28,7 @@
 		4.4> File type can be RAW or JPEG, based on user's choice.
 	Dependencies :	No.
 
-	5> Can transmit video data over network.                                                   (Not Implemented)
+	5> Can transmit video data over network.(Not Implemented)
 		5.1> Video can either be RAW or ENCODED as per user's choice.
 		5.2> Only single stream is available.
 
@@ -55,4 +55,4 @@
 		9.5> horizontal mirror
 		9.6> vertical mirror
 		9.7> Multi mirror displays
-		9.8> Thermal equivalent of video.                                                      (Not Implemented)
+		9.8> Thermal equivalent of video.(Not Implemented)
