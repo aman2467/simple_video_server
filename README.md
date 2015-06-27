@@ -13,14 +13,14 @@ Dependencies
 Build and Installation
 ----------------------
 	> make
-	> make install	(sudo may required)
+	> make install	(sudo may require)
 
 	> After this bin/ directory should contain following binaries:
 		1. video_server	:	video server application, this will be installed 
 							to filesystem /usr/local/bin by default.
 		2. cli_app		:	A test application(CLI interface) use to communicate 
 							with video server at run-time, APIs are mentioned in
-							docs/.
+							docs/command_list.txt.
 		3. test_player	:	A simple raw video player to test recorded raw video.
 
 	> After successful installation, video_server app can be searched and executed 
