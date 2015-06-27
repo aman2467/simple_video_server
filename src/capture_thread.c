@@ -34,8 +34,10 @@ struct capturebuffer {
 extern int g_osdflag;
 extern int g_writeflag;
 extern char *g_framebuff[NUM_BUFFER];
+extern char *g_streambuff;
 extern int current_task;
 extern lock_t buf_lock;
+extern lock_t stream_lock;
 
 /****************************************************************************
  * @function : This is the capture thread main function. It captures video frames
@@ -153,9 +155,18 @@ void *captureThread(void)
 			return NULL;
 		}
 		frame_cnt++;
-		lock(&buf_lock);
-		memcpy(g_framebuff[i],buffers[buf.index].start,serverConfig->capture.framesize);
-		unlock(&buf_lock);
+		if(serverConfig->enable_videosave_thread) {
+			lock(&buf_lock);
+			memcpy(g_framebuff[i],buffers[buf.index].start,serverConfig->capture.framesize);
+			unlock(&buf_lock);
+		}
+		if(serverConfig->enable_stream_thread && serverConfig->stream.enable) {
+			if(!serverConfig->enable_videosave_thread && !serverConfig->enable_osd_thread) {
+				lock(&stream_lock);
+				memcpy(g_streambuff, buffers[buf.index].start, serverConfig->capture.framesize);
+				unlock(&stream_lock);
+			}
+		}
 		if(!serverConfig->enable_osd_thread) {
 			if(serverConfig->enable_display_thread) {
 				memcpy(serverConfig->disp.display_frame,buffers[buf.index].start,serverConfig->capture.framesize);
@@ -170,19 +181,17 @@ void *captureThread(void)
 				serverConfig->image.recordenable = FALSE;
 				serverConfig->jpeg.framebuff = calloc(serverConfig->capture.framesize, 1);
 				lock(&buf_lock);
-				memcpy(serverConfig->jpeg.framebuff,g_framebuff[i],serverConfig->capture.framesize);
+				memcpy(serverConfig->jpeg.framebuff,buffers[buf.index].start, serverConfig->capture.framesize);
 				unlock(&buf_lock);
 			}
 		}
 		if(serverConfig->enable_osd_thread) {
 			g_osdflag = 1;
-		//	current_task = TASK_FOR_OSD;
 		} else if(serverConfig->enable_videosave_thread) {
 			g_writeflag = 1;
-		//	current_task = TASK_FOR_FILERECORD;
 		}
 		i++;
-		if(i > 9) i = 0;
+		if(i > NUM_BUFFER-1) i = 0;
 		if(ioctl(fd, VIDIOC_QBUF, &buf) == FAIL) {
 			perror("VIDIOC_QBUF");
 			return NULL;

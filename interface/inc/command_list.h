@@ -26,6 +26,7 @@ enum command_list {
 	COMMAND_SET_OSD_ON_IMAGE,		/* enables/disables OSD on snapshot to be saved */
 	COMMAND_SET_OSD_ON_VIDEO,		/* enables/disables OSD on video to be saved */
 	COMMAND_SET_OSD_TRANSPARENCY,	/* enables/disables given OSD window's transparency */
+	COMMAND_SET_ENABLE_STREAM,		/* enables/disables network streaming */
 };
 
 #endif

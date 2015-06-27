@@ -35,7 +35,7 @@ extern int quit_flag;
  * *************************************************************************/
 void watchdog(int sig)
 {
-	char server_msg[] = "\nVideo Server Not Alive";
+	char server_msg[] = "\nVideo Server Not Alive..";
 	char exit_msg[] = "\nTerminating Application...";
 	char *ch;
 
@@ -269,6 +269,23 @@ int osdwintrans(int win, int enable)
 	memcpy(arg,&win,sizeof(win));
 	memcpy(arg+sizeof(win),&enable,sizeof(enable));
 	if(sendCommand(COMMAND_SET_OSD_TRANSPARENCY,arg) < 0) {
+		return FAILURE;
+	}
+	return SUCCESS;
+}
+
+/****************************************************************************
+ * @usage : This function sends command to enable/disable network streaming.
+ *
+ * @arg  : enable/disable value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
+int nw_stream(int enable)
+{
+	char arg[26] = {0};
+
+	memcpy(arg, &enable, sizeof(enable));
+	if(sendCommand(COMMAND_SET_ENABLE_STREAM, arg) < 0) {
 		return FAILURE;
 	}
 	return SUCCESS;

@@ -36,7 +36,6 @@ CFLAGS += -g -O3
 LD_FLAGS += -lpthread
 LD_FLAGS += -ljpeg
 LD_FLAGS += -lSDL2
-#LD_FLAGS += -losdapi -lalgo
 CPPFLAGS += -I. \
 		-I./inc/ \
 		-I./interface/inc \
@@ -50,7 +49,7 @@ video_server:
 	${VERBOSE} ${CC} ${SRC_DIR}/*.c ${CFLAGS} ${CPPFLAGS} ${LD_FLAGS} -o ${RELTARGET}
 
 player:
-	${VERBOSE}gcc ${UTILS_DIR}/video_player.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/raw_player
+	${VERBOSE}gcc ${UTILS_DIR}/test_player.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/test_player
 
 cli_app:
 	${VERBOSE}gcc ${INTERFACE_DIR}/*.c ${CPPFLAGS} -o ${BIN_DIR}/cli_app
@@ -69,7 +68,7 @@ info:
 	${VERBOSE}echo "${YELLOW}Binaries :"
 	${VERBOSE}echo "        ${GREEN}1. ${TARGET}${NONE}"
 	${VERBOSE}echo "        ${GREEN}2. cli_app${NONE}"
-	${VERBOSE}echo "        ${GREEN}3. raw_player${NONE}"
+	${VERBOSE}echo "        ${GREEN}3. test_player${NONE}"
 	${VERBOSE}echo " "
 	${VERBOSE}echo "${CYAN}========================================================================================"
 	${VERBOSE}echo " "

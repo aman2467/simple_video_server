@@ -107,14 +107,14 @@ void *filerecordThread(void)
 					unlock(&buf_lock);
 				}
 				i++;
-				if(i > 9) i = 0;
+				if(i > NUM_BUFFER-1) i = 0;
 				g_writeflag = FALSE;
 			}
 			fclose(fp);
 		}
 		g_writeflag = FALSE;
 		i++;
-		if(i > 9) i = 1;
+		if(i > NUM_BUFFER-1) i = 0;
 	}
 	return 0;
 }

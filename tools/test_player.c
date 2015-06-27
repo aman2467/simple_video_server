@@ -1,7 +1,7 @@
 /* ==========================================================================
- * @file    : video_player.c
+ * @file    : test_player.c
  *
- * @description : This file contains the code of video player.
+ * @description : This file contains the source code to play raw files.
  *
  * @author  : Aman Kumar (2015)
  *
@@ -37,14 +37,14 @@ int main(int argc, char **argv )
 	char *frame = NULL;
 	int fps = 0, delay = 0;
 
-	if(argc != 5) {
-		printf("Usage: %s <YUY2_file.raw> <width> <height> <fps>\n",argv[0]);
+	if(argc != 4) {
+		printf("Usage: %s <YUY2_file.raw> <width> <height>\n",argv[0]);
 		exit(0);
 	}
 	SDL_Init(SDL_INIT_VIDEO);
 	width = atoi(argv[2]);
 	height = atoi(argv[3]);
-	fps = atoi(argv[4]);
+	fps = 0;
 	delay = 1000000/(fps+15);
 	snprintf(resolution, 20, "Capture : %dx%d", width,height);
 	frame = calloc(1,width*height*BPP);

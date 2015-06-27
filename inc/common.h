@@ -26,6 +26,8 @@
 #define OSD_TEXT_MAX_LENGTH 20 
 #define BPP 2
 #define SER_PORT 2467
+#define VID_PORT 5000
+#define CLIENT_IP "127.0.0.1"
 #undef STANDALONE
 
 /***************************************************************************/
@@ -35,6 +37,7 @@
 #define FILERECORD_THR 0x04
 #define JPEGSAVE_THR 0x08
 #define DISPLAY_THR 0x10
+#define STREAM_THR 0x20
 
 #define FALSE 0
 #define TRUE 1
@@ -137,11 +140,17 @@ struct display_buff {
 	char *sdl_frame;
 };
 
+struct nw_stream {
+	int enable;
+	int video_port;
+	char client_ip[16];
+};
+
 typedef struct server_config {
 	int enable_osd_thread;
 	int enable_imagesave_thread;
 	int enable_videosave_thread;
-	int enable_network_thread;
+	int enable_stream_thread;
 	int enable_display_thread;
 	int algo_type;
 	struct jpeg_parm jpeg;
@@ -152,6 +161,7 @@ typedef struct server_config {
 	struct osdwindow osdwin[OSD_MAX_WINDOW];
 	struct gen_settings settings;
 	struct display_buff disp;
+	struct nw_stream stream;
 } SERVER_CONFIG;
 
 int KillCaptureThread;
@@ -159,6 +169,7 @@ int KillOsdThread;
 int KillFilerecordThread;
 int KillJpegsaveThread;
 int KillDisplayThread;
+int KillStreamThread;
 
 void apply_algo(char *, int);
 void getcurrenttime(DATE_TIME *);
@@ -167,6 +178,7 @@ void set_osd_window_text(int, char *);
 void set_osd_window_position(int, int, int);
 void set_osd_window_transparency(int, int);
 void update_osd_window(int);
+char *get_frame(void);
 SERVER_CONFIG *GetServerConfig(void);
 
 #endif

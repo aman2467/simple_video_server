@@ -59,6 +59,8 @@ void CmndOsdWinPos(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdOnImage(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdOnVideo(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndOsdWinTrans(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndNWStream(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
+void CmndList(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndHelp(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndClearScreen(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndExit(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
@@ -73,6 +75,7 @@ int osdwinpos(int, int, int);
 int osdonimage(int);
 int osdonvideo(int);
 int osdwintrans(int, int);
+int nw_stream(int);
 void watchdog(int);
 
 #endif

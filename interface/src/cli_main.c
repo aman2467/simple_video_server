@@ -46,6 +46,8 @@ const  struct  CmndTableEntry_t  asCommand[] = {
 	{"osdonimage",			USER_CMD,		CmndOsdOnImage},	
 	{"osdonvideo",			USER_CMD,		CmndOsdOnVideo},	
 	{"osdwintrans",			USER_CMD,		CmndOsdWinTrans},	
+	{"stream",				USER_CMD,		CmndNWStream},	
+	{"ls",					USER_CMD,		CmndList},
 	{"help",				USER_CMD,		CmndHelp},
 	{"clear",				USER_CMD,		CmndClearScreen},
 	{"exit",				USER_CMD,		CmndExit},
@@ -142,6 +144,32 @@ void CommandLineInterpreter(void)
 		printf("%s", kszCommandError);
 	}
 }
+
+/**********************************************************************
+ * CmndList :  This function is called when a Command 'ls' is
+ *			  typed in the CLI prompt. It lists all commands.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndList(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	char *command;
+	int i;
+
+	if(uwCmndArgCount == 1)	{
+		for (i = 0; i < MAX_COMMANDS; i++) {   /* List commands */
+			command = asCommand[i].pzName;
+
+			if (*command == '$')
+				break;  /* Reached end of Cmnd Table */
+
+			printf("%s\n", command);
+		}
+	}
+}
+
 
 /**********************************************************************
  * CmndHelp : This function is called when a Command 'help' is
@@ -545,6 +573,36 @@ usage:
 	printf("Arg's:\t1. OSD window no -> OSD window between 0 to 9\n");
 	printf("\t2. enable -> To enable given OSD Window\n");
 	printf("\t   disble -> To disable given OSD Window\n");
+	return;
+}
+
+/**********************************************************************
+ * CmndNWStream :  This function is called when a Command 'stream' 
+ *			  is typed in the CLI prompt. It enables/disables network stream.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndNWStream(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int enable;
+	if (uwCmndArgCount == 2) {
+		if(strcmp("enable",apcCmndArgVal[1]) == 0) {
+			enable = 1;
+		} else if(strcmp("disable",apcCmndArgVal[1]) == 0) {
+			enable = 0;
+		}
+		if(nw_stream(enable) < 0) {
+			printf("\nCommand stream failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: stream <enable|disable>\n");
+	printf("Arg's:\tenable -> To enable network streaming\n");
+	printf("\tdisble -> To disable network streaming\n");
 	return;
 }
 

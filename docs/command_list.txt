@@ -44,13 +44,19 @@
 				2. enable -> To enable given OSD Window
 			   	   disble -> To disable given OSD Window
 
-	10. clear
+	10. stream <enable|disable>
+		enable - > to enable network streaming of captured frame
+		disable - > to disble network streaming of captured frame
+
+	11. ls
+		(to list all the commands)
+
+	12. clear
 		(to clear the screen)
 
-	11. help
+	13. help
 		(help for command and cli usage)
 
-	12. exit
+	14. exit
 		(exits the cli program)
-
 

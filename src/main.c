@@ -34,11 +34,13 @@ int g_osdflag = 0;
 
 char *g_framebuff[NUM_BUFFER] = {NULL};
 char *g_osdbuff[NUM_BUFFER] = {NULL};
+char *g_streambuff = NULL;
 char *ascii_string;
 char ascii_data[STRING_WIDTH*TEXT_HEIGHT*TEXT_WIDTH*BPP];
 
 int current_task;
 lock_t buf_lock;
+lock_t stream_lock;
 SERVER_CONFIG g_server_config;
 
 extern void *captureThread(void *);
@@ -46,6 +48,7 @@ extern void *filerecordThread(void *);
 extern void *osdThread(void *);
 extern void *jpegsaveThread(void *);
 extern void *displayThread(void *);
+extern void *nwstreamThread(void *);
 
 /****************************************************************************
  * @usage : This function returns pointer global configuration structure.
@@ -74,6 +77,7 @@ void usage(char *exename)
 	printf(GREEN"\t\tvideosave        "NONE":"YELLOW" To enable video save\n");
 	printf(GREEN"\t\timagesave        "NONE":"YELLOW" To enable snapshot save\n");
 	printf(GREEN"\t\tdisplay          "NONE":"YELLOW" To enable local display\n");
+	printf(GREEN"\t\tstream           "NONE":"YELLOW" To enable network streaming\n");
 	printf(GREEN"\t\t-d <device>      "NONE":"YELLOW" To capture video from given device\n");
 	printf(GREEN"\t\t-w <width>       "NONE":"YELLOW" Supported capture width\n");
 	printf(GREEN"\t\t-h <height>      "NONE":"YELLOW" Supported capture height"NONE"\n");
@@ -89,36 +93,40 @@ void usage(char *exename)
  * *************************************************************************/
 void Init_Server(SERVER_CONFIG *serverConfig)
 {
-/* threads settings */
+	/* threads settings */
 	serverConfig->enable_osd_thread = FALSE;
 	serverConfig->enable_imagesave_thread = FALSE;
 	serverConfig->enable_videosave_thread = FALSE;
-	serverConfig->enable_network_thread = FALSE;
+	serverConfig->enable_stream_thread = FALSE;
 	serverConfig->enable_display_thread = FALSE;
-/* algorithm settings */
+	/* algorithm settings */
 	serverConfig->algo_type = ALGO_NONE;
-/* JPEG Param settings */
+	/* JPEG Param settings */
 	serverConfig->jpeg.quality = 300;
 	serverConfig->jpeg.framebuff = NULL;
-/* Capture settings */
+	/* Capture settings */
 	strcpy(serverConfig->capture.device,"/dev/video0");
 	serverConfig->capture.width = 640;
 	serverConfig->capture.height = 480;
 	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
-/* network settings */
+	/* network settings */
 	serverConfig->nw.port = SER_PORT;
 	strcpy(serverConfig->nw.ip,"127.0.0.1");
-/* video record settings */
+	/* video record settings */
 	serverConfig->video.recordenable = FALSE;
 	serverConfig->video.osd_on = FALSE;
 	serverConfig->video.type = TYPE_NONE;
-/* image record settings */
+	/* image record settings */
 	serverConfig->image.recordenable = FALSE;
 	serverConfig->image.osd_on = FALSE;
 	serverConfig->image.type = TYPE_NONE;
-/* display settings */
+	/* display settings */
 	serverConfig->disp.display_frame = NULL;
 	serverConfig->disp.sdl_frame = NULL;
+	/* stream settings */
+	serverConfig->stream.enable = FALSE;
+	serverConfig->stream.video_port = VID_PORT;
+	strcpy(serverConfig->stream.client_ip, CLIENT_IP);
 }
 
 /****************************************************************************
@@ -132,7 +140,7 @@ int main(int argc, char **argv)
 {
 	int threadStatus = 0;
 	pthread_t tCaptureThread, tOsdThread, tFilerecordThread, tJpegsaveThread;
-	pthread_t tDisplayThread;
+	pthread_t tDisplayThread, tStreamThread;
 	int i;
 	int command;
 	int arg1, arg2, arg3;
@@ -161,6 +169,8 @@ int main(int argc, char **argv)
 			serverConfig->enable_imagesave_thread = TRUE;
 		} else if (strcmp(argv[i], "display") == 0) {
 			serverConfig->enable_display_thread = TRUE;
+		} else if (strcmp(argv[i], "stream") == 0) {
+			serverConfig->enable_stream_thread = TRUE;
 		} else if (strcmp(argv[i], "-d") == 0) {
 			strcpy(serverConfig->capture.device,argv[++i]);
 		} else if (strcmp(argv[i], "-w") == 0) {
@@ -171,6 +181,7 @@ int main(int argc, char **argv)
 	}
 
 	lock_init(&buf_lock);
+	lock_init(&stream_lock);
 	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
 	if(serverConfig->enable_display_thread) {
 		if(!serverConfig->enable_osd_thread) {
@@ -179,14 +190,19 @@ int main(int argc, char **argv)
 		serverConfig->disp.display_frame = calloc(1,serverConfig->capture.framesize);
 	}
 	for(i = 0; i < NUM_BUFFER ;i++) {
-		g_framebuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
-		memset(g_framebuff[i],0,serverConfig->capture.framesize);
-		if(serverConfig->enable_osd_thread) {
-			g_osdbuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
+		if(serverConfig->enable_videosave_thread) {
+			g_framebuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
 			memset(g_framebuff[i],0,serverConfig->capture.framesize);
 		}
+		if(serverConfig->enable_osd_thread) {
+			g_osdbuff[i] = (char *)calloc(1,serverConfig->capture.framesize);
+			memset(g_osdbuff[i],0,serverConfig->capture.framesize);
+		}
 	}
-
+	if(serverConfig->enable_stream_thread) {
+		g_streambuff = (char *)calloc(1,serverConfig->capture.framesize);
+		memset(g_streambuff,0,serverConfig->capture.framesize);
+	}
 	KillCaptureThread = 0;
 	if(pthread_create(&tCaptureThread, NULL, captureThread, NULL)) {
 		printf("Capture Thread create fail\n");
@@ -235,6 +251,16 @@ int main(int argc, char **argv)
 		threadStatus |= DISPLAY_THR;
 	}
 
+	if(serverConfig->enable_stream_thread) {
+		KillStreamThread = 0;
+		if(pthread_create(&tStreamThread, NULL, nwstreamThread, NULL)) {
+			perror("Network Stream Thread create fail\n");
+			exit(0);
+		}
+		pr_dbg("Network Stream Thread created\n");
+		threadStatus |= STREAM_THR;
+	}
+
 	if((sock_fd=socket(AF_INET,SOCK_DGRAM,0))<0) {/* socket creation  */
 		perror("socket");
 		exit(0);
@@ -277,6 +303,11 @@ int main(int argc, char **argv)
 	} else {
 		pr_dbg(CYAN"\tDisplay \t\t:\t"RED" NO"NONE"\n");
 	}
+	if(serverConfig->enable_stream_thread == TRUE) {
+		pr_dbg(CYAN"\tStreaming \t\t:\t"GREEN" YES"NONE"\n");
+	} else {
+		pr_dbg(CYAN"\tStreaming \t\t:\t"RED" NO"NONE"\n");
+	}
 	pr_dbg(YELLOW"/************************************************************/"NONE"\n");
 #endif
 
@@ -313,7 +344,7 @@ int main(int argc, char **argv)
 				break;
 			case COMMAND_SET_VIDEO_TYPE:
 				arg1 = *((int *)data);
-				if(serverConfig->enable_videosave_thread || serverConfig->enable_network_thread) {
+				if(serverConfig->enable_videosave_thread || serverConfig->enable_stream_thread) {
 					serverConfig->video.type = arg1;
 					ret = 0;
 				} else {
@@ -384,6 +415,15 @@ int main(int argc, char **argv)
 					ret = 1;
 				}
 				break;
+			case COMMAND_SET_ENABLE_STREAM:
+				arg1 = *((int *)data);
+				if(serverConfig->enable_stream_thread) {
+					serverConfig->stream.enable = arg1;
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
 			default:
 				ret = -1;
 				break;
@@ -402,6 +442,12 @@ int main(int argc, char **argv)
 		usleep(10);
 	}
 
+	if(serverConfig->enable_stream_thread == TRUE) {
+		if(threadStatus & STREAM_THR){
+			KillStreamThread = 1;
+			pthread_join(tStreamThread, NULL);
+		}
+	}
 	if(serverConfig->enable_display_thread == TRUE) {
 		if(threadStatus & DISPLAY_THR){
 			KillDisplayThread = 1;
