@@ -77,6 +77,10 @@ int main(int argc, char **argv )
 		if (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
 				break;
+			} else if(e.key.type == SDL_KEYUP) {
+				if(e.key.keysym.sym == SDLK_ESCAPE) {
+					break;
+				}
 			}
 		}
 		SDL_UpdateTexture(texture,0,
