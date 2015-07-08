@@ -125,7 +125,7 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 	serverConfig->disp.sdl_frame = NULL;
 	/* stream settings */
 	serverConfig->stream.enable = FALSE;
-	serverConfig->stream.video_port = VID_PORT;
+	serverConfig->stream.video_port = CLI_PORT;
 	strcpy(serverConfig->stream.client_ip, CLIENT_IP);
 }
 

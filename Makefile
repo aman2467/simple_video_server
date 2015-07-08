@@ -15,6 +15,7 @@
 VERBOSE = @
 BASEDIR = $(PWD)
 TARGET =video_server
+TARGET_T1=test_player
 #CC =arm-poky-linux-gnueabi-gcc
 CC =gcc
 NONE=\033[0m
@@ -50,7 +51,7 @@ video_server:
 	${VERBOSE} ${CC} ${SRC_DIR}/*.c ${CFLAGS} ${CPPFLAGS} ${LD_FLAGS} -o ${RELTARGET}
 
 player:
-	${VERBOSE}gcc ${TOOLS_DIR}/test_player.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/test_player
+	${VERBOSE}gcc ${TOOLS_DIR}/${TARGET_T1}/${TARGET_T1}.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/${TARGET_T1}
 
 cli_app:
 	${VERBOSE}gcc ${INTERFACE_DIR}/*.c ${CPPFLAGS} -o ${BIN_DIR}/cli_app
@@ -69,13 +70,13 @@ info:
 	${VERBOSE}echo "${YELLOW}Binaries :"
 	${VERBOSE}echo "        ${GREEN}1. ${TARGET}${NONE}"
 	${VERBOSE}echo "        ${GREEN}2. cli_app${NONE}"
-	${VERBOSE}echo "        ${GREEN}3. test_player${NONE}"
+	${VERBOSE}echo "        ${GREEN}3. ${TARGET_T1}${NONE}"
 	${VERBOSE}echo " "
 	${VERBOSE}echo "${CYAN}========================================================================================"
 	${VERBOSE}echo " "
 
 install:
-	${VERBOSE}mkdir -p /usr/share/svs
-	${VERBOSE}cp ${UTILS_DIR}/logo.png /usr/share/svs/
-	${VERBOSE}cp ${BIN_DIR}/${TARGET} /usr/local/bin/
-	${VERBOSE}cp ${TARGET}.desktop /usr/share/applications/
+	${VERBOSE}sudo mkdir -p /usr/share/svs
+	${VERBOSE}sudo cp ${UTILS_DIR}/logo.png /usr/share/svs/
+	${VERBOSE}sudo cp ${BIN_DIR}/${TARGET} /usr/local/bin/
+	${VERBOSE}sudo cp ${TARGET}.desktop /usr/share/applications/

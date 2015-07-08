@@ -26,7 +26,9 @@
 #define OSD_TEXT_MAX_LENGTH 20 
 #define BPP 2
 #define SER_PORT 2467
+#define LINE_CNT 1
 #define VID_PORT 5000
+#define CLI_PORT 5005
 #define CLIENT_IP "127.0.0.1"
 #undef STANDALONE
 

@@ -26,8 +26,6 @@
 #include <arpa/inet.h>
 #include <common.h>
 
-#define LINE_CNT 1
-
 extern char *g_streambuff;
 extern lock_t stream_lock;
 
@@ -111,6 +109,7 @@ void *nwstreamThread(void)
 			}
 		}
 	}
+	free(linebuff);
 	close(sock_fd);
 	printf("Network stream terminated\n");
 	return 0;
