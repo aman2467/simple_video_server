@@ -16,6 +16,7 @@ VERBOSE = @
 BASEDIR = $(PWD)
 TARGET =video_server
 TARGET_T1=test_player
+TARGET_T2=nw_frame_receiver
 #CC =arm-poky-linux-gnueabi-gcc
 CC =gcc
 NONE=\033[0m
@@ -44,7 +45,7 @@ CPPFLAGS += -I. \
 
 .PHONY: clean all video_server player cli_app info
 
-all: video_server cli_app player info
+all: video_server cli_app player nw_receiver info
 
 video_server:
 	${VERBOSE} sed -i "s,PATH,$(DATABASE_DIR),g"  $(BASEDIR)/inc/osd_thread.h
@@ -52,6 +53,9 @@ video_server:
 
 player:
 	${VERBOSE}gcc ${TOOLS_DIR}/${TARGET_T1}/${TARGET_T1}.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/${TARGET_T1}
+
+nw_receiver:
+	${VERBOSE}make -s -C ${TOOLS_DIR}/${TARGET_T2}/ all
 
 cli_app:
 	${VERBOSE}gcc ${INTERFACE_DIR}/*.c ${CPPFLAGS} -o ${BIN_DIR}/cli_app
@@ -71,6 +75,7 @@ info:
 	${VERBOSE}echo "        ${GREEN}1. ${TARGET}${NONE}"
 	${VERBOSE}echo "        ${GREEN}2. cli_app${NONE}"
 	${VERBOSE}echo "        ${GREEN}3. ${TARGET_T1}${NONE}"
+	${VERBOSE}echo "        ${GREEN}4. ${TARGET_T2}${NONE}"
 	${VERBOSE}echo " "
 	${VERBOSE}echo "${CYAN}========================================================================================"
 	${VERBOSE}echo " "
