@@ -37,7 +37,6 @@ extern char *g_framebuff[NUM_BUFFER];
 extern char *g_streambuff;
 extern int current_task;
 extern lock_t buf_lock;
-extern lock_t stream_lock;
 
 /****************************************************************************
  * @function : This is the capture thread main function. It captures video frames
@@ -161,11 +160,7 @@ void *captureThread(void)
 			unlock(&buf_lock);
 		}
 		if(serverConfig->enable_stream_thread && serverConfig->stream.enable) {
-			if(!serverConfig->enable_videosave_thread && !serverConfig->enable_osd_thread) {
-				lock(&stream_lock);
-				memcpy(g_streambuff, buffers[buf.index].start, serverConfig->capture.framesize);
-				unlock(&stream_lock);
-			}
+			memcpy(g_streambuff, buffers[buf.index].start, serverConfig->capture.framesize);
 		}
 		if(!serverConfig->enable_osd_thread) {
 			if(serverConfig->enable_display_thread) {

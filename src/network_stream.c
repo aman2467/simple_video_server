@@ -27,7 +27,6 @@
 #include <common.h>
 
 extern char *g_streambuff;
-extern lock_t stream_lock;
 
 /*******************************************************************************
  * @func    : get_frame
@@ -93,7 +92,6 @@ void *nwstreamThread(void)
 				(*(frameptr))++;
 				*(lineptr) = 0;
 				transmit_frame = get_frame();
-				lock(&stream_lock);
 				ptr = transmit_frame;
 				/* transmit a frame */
 				while(ptr < transmit_frame + serverConfig->capture.framesize) {
@@ -105,7 +103,6 @@ void *nwstreamThread(void)
 					}
 					ptr += LINE_CNT*bpl;
 				}
-				unlock(&stream_lock);
 			}
 		}
 	}

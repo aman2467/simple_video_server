@@ -42,6 +42,8 @@ void displayThread(void)
 	SDL_Window *win = NULL;
 	SDL_Renderer *renderer = NULL;
 	SDL_Texture *texture = NULL;
+	SDL_Event e;
+	int kill = FALSE;
 	char resolution[20] = {0};
 #else
 	FILE *fp = NULL;
@@ -88,7 +90,23 @@ void displayThread(void)
 			pr_dbg("Frame %d is going to skip\n",g_skipframe);
 			flag = 1;
 		}
-
+#if 0
+		/* check SDL event if any */
+		if (SDL_PollEvent(&e)) {
+			if (e.type == SDL_QUIT) {
+				break;
+			} else if(e.key.type == SDL_KEYUP) {
+				switch(e.key.keysym.sym) {
+					case SDLK_ESCAPE:
+						kill = TRUE;
+						break;
+					default:
+						break;
+				}
+				if(kill) break;
+			}
+		}
+#endif
 		if(g_skipframe == popped->frame_num) {
 			continue;
 		}
@@ -147,6 +165,6 @@ void displayThread(void)
 #endif
 	free(popped->packetbuff);
 	free(popped);
-	pr_dbg("Display Thread Terminated\n");
-
+	pr_dbg("Exiting Application\n");
+	exit(0);
 }

@@ -86,6 +86,7 @@ void *displayThread(void)
 						break;
 					case SDLK_ESCAPE:
 						kill = TRUE;
+						break;
 					default:
 						break;
 				}

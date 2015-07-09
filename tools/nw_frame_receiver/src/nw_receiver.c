@@ -135,7 +135,6 @@ void addpacket(char *video_packet)
 	unlock(&q_lock);
 	lock(&cnt_lock);
 	q_size++;
-	//printf("size : %d\n", q_size);
 	unlock(&cnt_lock);
 }
 
