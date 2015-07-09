@@ -163,6 +163,7 @@ int main(int argc, char **argv)
 	for(i=1;i<argc;i++) {
 		if (strcmp(argv[i], "osd") == 0) {
 			serverConfig->enable_osd_thread = TRUE;
+			serverConfig->enable_videosave_thread = TRUE;
 		} else if (strcmp(argv[i], "videosave") == 0) {
 			serverConfig->enable_videosave_thread = TRUE;
 		} else if (strcmp(argv[i], "imagesave") == 0) {
