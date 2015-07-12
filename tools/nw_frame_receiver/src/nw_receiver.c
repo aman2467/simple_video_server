@@ -39,6 +39,10 @@ unsigned int buffsize;
 unsigned int packetsize;
 int g_video_port = VIDEO_PORT;
 int g_last_line = 480;
+#ifndef LOCAL_DISPLAY
+int no_of_frames_to_save = NO_OF_FRAMES_TO_SAVE;
+char g_filename[50] = {0};
+#endif
 char g_sendcount[20];
 char *g_displaybuff = NULL;
 char g_board_ip[20] = {0};
@@ -213,7 +217,9 @@ int main(int argc, char **argv)
 		usage(argv[0]);
 		exit(0);
 	}
-
+#ifndef LOCAL_DISPLAY
+	strcpy(g_filename, "captured_file.yuv");
+#endif
 	for(i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-w") == 0) {
 			g_capture_width = atoi(argv[++i]) + 1;
@@ -222,6 +228,15 @@ int main(int argc, char **argv)
 			g_last_line = g_capture_height/LINE_CNT;
 		} else if (strcmp(argv[i], "-v") == 0) {
 			g_video_port = atoi(argv[++i]);
+		} else if (strcmp(argv[i], "-c") == 0) {
+#ifdef LOCAL_DISPLAY
+			printf("\nLocal file save disabled.\n");
+			printf("Undefine LOCAL_DISPLAY and recompile to enable this.\n");
+#else
+			no_of_frames_to_save = atoi(argv[++i]);
+		} else if (strcmp(argv[i], "-o") == 0) {
+			strcpy(g_filename ,argv[++i]);
+#endif
 		}
 	}
 
@@ -258,7 +273,11 @@ int main(int argc, char **argv)
 		printf("Display Thread create fail\n");
 		exit(0);
 	}
+#ifdef LOCAL_DISPLAY
 	pr_dbg("Display Thread created\n");
+#else
+	pr_dbg("Filesave Thread created\n");
+#endif
 	threadStatus |= DISP_THR;
 
 	recvbuff = (char *)calloc(10, packetsize);
@@ -275,8 +294,11 @@ int main(int argc, char **argv)
 		KillDisplayThread = 1;
 		pthread_join(tDisplayThread, NULL);
 	}
+#ifdef LOCAL_DISPLAY
 	pr_dbg("Terminating Display Thread\n");
-
+#else
+	pr_dbg("Terminating Filesave Thread\n");
+#endif
 	if(sizeofqueue() > 0) {
 		temp = (VIDEO_DATA *)calloc(1, sizeof(VIDEO_DATA));
 		temp->packetbuff = calloc(1, packetsize - VALID_DATA);

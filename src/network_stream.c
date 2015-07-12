@@ -63,7 +63,7 @@ void *nwstreamThread(void)
 		exit(0);
 	}
 	ser_addr.sin_family = AF_INET;
-	ser_addr.sin_port = htons(VID_PORT);
+	ser_addr.sin_port = htons(VID_SER_PORT);
 	ser_addr.sin_addr.s_addr = inet_addr("0.0.0.0");
 	slen = sizeof(ser_addr);
 

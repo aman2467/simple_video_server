@@ -35,6 +35,10 @@ extern unsigned int buffsize;
 extern unsigned int q_size;
 extern unsigned int g_skipframe;
 extern int g_last_line;
+#ifndef LOCAL_DISPLAY
+extern int no_of_frames_to_save;
+extern char g_filename[50];
+#endif
 
 void displayThread(void)
 {
@@ -75,7 +79,7 @@ void displayThread(void)
 			g_capture_width,
 			g_capture_height);
 #else
-	fp = fopen("file.yuv","wb");
+	fp = fopen(g_filename, "wb");
 #endif
 	while(!KillDisplayThread) {
 		if((sizeofqueue() > 0) && (g_displaybuff)) {
@@ -131,7 +135,10 @@ void displayThread(void)
 #else
 				/* save frame */
 				fwrite(g_displaybuff, buffsize, 1, fp);
-				if(frame_cnt++ > 100) exit(0);
+				if(frame_cnt++ > no_of_frames_to_save) {
+					fclose(fp);
+					exit(0);
+				}
 #endif
 			}
 			lineseeker = g_displaybuff;

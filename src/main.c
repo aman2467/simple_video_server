@@ -110,7 +110,7 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 	serverConfig->capture.height = 480;
 	serverConfig->capture.framesize = serverConfig->capture.width*serverConfig->capture.height*BPP;
 	/* network settings */
-	serverConfig->nw.port = SER_PORT;
+	serverConfig->nw.port = CLI_SER_PORT;
 	strcpy(serverConfig->nw.ip,"127.0.0.1");
 	/* video record settings */
 	serverConfig->video.recordenable = FALSE;
@@ -125,7 +125,7 @@ void Init_Server(SERVER_CONFIG *serverConfig)
 	serverConfig->disp.sdl_frame = NULL;
 	/* stream settings */
 	serverConfig->stream.enable = FALSE;
-	serverConfig->stream.video_port = CLI_PORT;
+	serverConfig->stream.video_port = STREAM_PORT;
 	strcpy(serverConfig->stream.client_ip, CLIENT_IP);
 }
 
@@ -268,11 +268,11 @@ int main(int argc, char **argv)
 	}
 #ifndef STANDALONE
 	ser_addr.sin_family=AF_INET;/* domain family is set to ipv4*/
-	ser_addr.sin_port=htons(SER_PORT);
+	ser_addr.sin_port=htons(CLI_SER_PORT);
 	ser_addr.sin_addr.s_addr=inet_addr("0.0.0.0");
 	slen=sizeof(ser_addr);
 	cli_addr.sin_family=AF_INET;/* domain family is set to ipv4*/
-	cli_addr.sin_port=htons(SER_PORT);
+	cli_addr.sin_port=htons(CLI_SER_PORT);
 	clen=sizeof(cli_addr);
 	if(bind(sock_fd,(const struct sockaddr *)&ser_addr,slen)<0) {
 		perror("bind");

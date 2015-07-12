@@ -20,7 +20,7 @@
 #define FIRST_LINE  1
 #define VALID_DATA   8
 #define LINE_CNT 1
-#define VIDEO_PORT 5000
+#define VIDEO_PORT 5005
 #define LINE_NUM_SIZE 4
 #define FRAME_NUM_SIZE 4
 
@@ -38,6 +38,9 @@
 #endif
 
 //#define LOCAL_DISPLAY
+#ifndef LOCAL_DISPLAY
+#define NO_OF_FRAMES_TO_SAVE 100
+#endif
 
 int KillDisplayThread;
 
