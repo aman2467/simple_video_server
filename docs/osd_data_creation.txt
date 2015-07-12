@@ -1,0 +1,35 @@
+Steps to create and display an OSD data:
+----------------------------------------
+	1. Create an image(.jpg or .png) of required resolution(say 20x20)
+	which has to be displayed over video.
+
+	2. Convert the image to required YUV format using following command-
+		$ ffmpeg -i filename.jpg -s 20x20 -pix_fmt <format> filename.yuv
+			where <format> will be according to the format of video data.
+			for ex:	 yuyv422 is for YUY2 video format
+			Here, 20x20	is the resolution of input image
+
+	3. copy filename.yuv to database/ directory.
+
+	4. Update all the Macro variables for the particular OSD Window, where
+	this OSD data has to be displayed. For example if OSD WINDOW two is 
+	selected for the image, following changes to be done in inc/osd_thread.h
+		OSD_WINDOW_TWO_X 100
+		OSD_WINDOW_TWO_Y 200
+		OSD_WINDOW_TWO_W 20
+		OSD_WINDOW_TWO_H 20
+	These above changes will display an image of resolution 20x20 at location
+	(100,200) over the video.
+
+	5. The name of the OSD data file to be displayed on Window 2 should be
+	"win_2.yuyv".
+
+Important notes:
+----------------
+	1. OSD data should always be in same format as that of video data.
+	2. All OSD data should be present inside database/ directory.
+	3. ffmpeg package can be intalled to an Ubuntu machine with following-
+		$ sudo add-apt-repository ppa:mc3man/trusty-media
+		$ sudo apt-get update
+		$ sudo apt-get install ffmpeg
+
