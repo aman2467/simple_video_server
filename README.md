@@ -22,12 +22,14 @@ Build and Installation
 							with video server at run-time, APIs are mentioned in
 							docs/command_list.txt.
 		3. test_player	:	A simple raw video player to test recorded raw video.
+		4. nw_receiver	:	A commandline utility to receive and display/save 
+							frames transmitted by videoserver over the network.
 
 	> After successful installation, video_server app can be searched and executed 
 	from User's Application list.
 
 Running from command-line
 -------------------------
-	> All the binaries can also be run from command-line interface.
+	> All the binaries including video_server can be run from command-line interface.
 	> Use '-h' with the binaries to get the usage.
 
