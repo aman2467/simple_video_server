@@ -425,6 +425,24 @@ int main(int argc, char **argv)
 					ret = 1;
 				}
 				break;
+			case COMMAND_SET_ENABLE_DATE:
+				arg1 = *((int *)data);
+				if(serverConfig->enable_osd_thread) {
+					set_osd_window_enable(OSD_WINDOW_NINE, arg1);
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
+			case COMMAND_SET_ENABLE_TIME:
+				arg1 = *((int *)data);
+				if(serverConfig->enable_osd_thread) {
+					set_osd_window_enable(OSD_WINDOW_EIGHT, arg1);
+					ret = 0;
+				} else {
+					ret = 1;
+				}
+				break;
 			default:
 				ret = -1;
 				break;

@@ -37,20 +37,22 @@ static const char kszCommandError[] = "command not found\n";
  ****************************************************************************/
 const  struct  CmndTableEntry_t  asCommand[] = {
 	/*  Name				Attribute       Address   */
-	{"takesnap",			USER_CMD,		CmndTakeSnap},	
-	{"recordvideo",			USER_CMD,		CmndRecordVideo},	
-	{"setalgotype",			USER_CMD,		CmndSetAlgoType},	
+	{"clear",				USER_CMD,		CmndClearScreen},
+	{"date",				USER_CMD,		CmndDate},	
+	{"exit",				USER_CMD,		CmndExit},
+	{"help",				USER_CMD,		CmndHelp},
+	{"ls",					USER_CMD,		CmndList},
 	{"osdwinenable",		USER_CMD,		CmndOsdWinEnable},	
 	{"osdwintext",			USER_CMD,		CmndOsdWinText},	
 	{"osdwinpos",			USER_CMD,		CmndOsdWinPos},	
 	{"osdonimage",			USER_CMD,		CmndOsdOnImage},	
 	{"osdonvideo",			USER_CMD,		CmndOsdOnVideo},	
 	{"osdwintrans",			USER_CMD,		CmndOsdWinTrans},	
+	{"recordvideo",			USER_CMD,		CmndRecordVideo},	
+	{"setalgotype",			USER_CMD,		CmndSetAlgoType},	
 	{"stream",				USER_CMD,		CmndNWStream},	
-	{"ls",					USER_CMD,		CmndList},
-	{"help",				USER_CMD,		CmndHelp},
-	{"clear",				USER_CMD,		CmndClearScreen},
-	{"exit",				USER_CMD,		CmndExit},
+	{"takesnap",			USER_CMD,		CmndTakeSnap},	
+	{"time",				USER_CMD,		CmndTime},	
 	{"$",					DEBUG_CMD,      NULL},   /* Dummy last entry */
 } ;
 
@@ -603,6 +605,66 @@ usage:
 	printf("\nUsage: stream <enable|disable>\n");
 	printf("Arg's:\tenable -> To enable network streaming\n");
 	printf("\tdisble -> To disable network streaming\n");
+	return;
+}
+
+/**********************************************************************
+ * CmndDate :  This function is called when a Command 'date' 
+ *			  is typed in the CLI prompt. It enables/disables date stamp.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndDate(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int enable;
+	if (uwCmndArgCount == 2) {
+		if(strcmp("enable",apcCmndArgVal[1]) == 0) {
+			enable = 1;
+		} else if(strcmp("disable",apcCmndArgVal[1]) == 0) {
+			enable = 0;
+		}
+		if(enable_date(enable) < 0) {
+			printf("\nCommand date failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: date <enable|disable>\n");
+	printf("Arg's:\tenable -> To enable date stamp over video\n");
+	printf("\tdisble -> To disable date stamp over video\n");
+	return;
+}
+
+/**********************************************************************
+ * CmndTime :  This function is called when a Command 'time' 
+ *			  is typed in the CLI prompt. It enables/disables time stamp.
+ *
+ * @uwCmndArgCount   : Number of Cmnd Line args (incl. Cmnd name)
+ * @*apcCmndArgVal[] : Array of pointers to Command Line args
+ * @return value     : void
+ * ********************************************************************/
+void CmndTime(UINT16 uwCmndArgCount, char *apcCmndArgVal[])
+{
+	int enable;
+	if (uwCmndArgCount == 2) {
+		if(strcmp("enable",apcCmndArgVal[1]) == 0) {
+			enable = 1;
+		} else if(strcmp("disable",apcCmndArgVal[1]) == 0) {
+			enable = 0;
+		}
+		if(enable_time(enable) < 0) {
+			printf("\nCommand time failed\n");
+		}
+		return;
+	}
+
+usage:
+	printf("\nUsage: time <enable|disable>\n");
+	printf("Arg's:\tenable -> To enable time stamp over video\n");
+	printf("\tdisble -> To disable time stamp over video\n");
 	return;
 }
 

@@ -291,3 +291,37 @@ int nw_stream(int enable)
 	return SUCCESS;
 }
 
+/****************************************************************************
+ * @usage : This function sends command to enable/disable date stamp.
+ *
+ * @arg  : enable/disable value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
+int enable_date(int enable)
+{
+	char arg[26] = {0};
+
+	memcpy(arg, &enable, sizeof(enable));
+	if(sendCommand(COMMAND_SET_ENABLE_DATE, arg) < 0) {
+		return FAILURE;
+	}
+	return SUCCESS;
+}
+
+/****************************************************************************
+ * @usage : This function sends command to enable/disable time stamp.
+ *
+ * @arg  : enable/disable value input from command line
+ * @return     : success/failure of function
+ * *************************************************************************/
+int enable_time(int enable)
+{
+	char arg[26] = {0};
+
+	memcpy(arg, &enable, sizeof(enable));
+	if(sendCommand(COMMAND_SET_ENABLE_TIME, arg) < 0) {
+		return FAILURE;
+	}
+	return SUCCESS;
+}
+

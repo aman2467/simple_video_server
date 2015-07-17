@@ -1,5 +1,5 @@
 #################################################################################
-               Command list implemented to control video-server
+               Commands implemented to communicate with video-server
 #################################################################################
 
 # Command List :
@@ -24,11 +24,11 @@
 
 	5. osdonimage <enable|disable>
 		enable - > to enable osd on image to be saved
-		disable - > to disble osd on image to be saved
+		disable - > to disable osd on image to be saved
 	
 	6. osdonvideo <enable|disable>
 		enable - > to enable osd on video to be saved
-		disable - > to disble osd on video to be saved
+		disable - > to disable osd on video to be saved
 
 	7. osdwintext <OSD window no.> <text>
 		Arg's:	1. OSD window no -> OSD window between 5 to 9
@@ -42,21 +42,29 @@
 	9. osdwintrans <OSD window no.> <enable|disable>
 		Arg's:	1. OSD window no -> OSD window between 0 to 9
 				2. enable -> To enable given OSD Window
-			   	   disble -> To disable given OSD Window
+			   	   disable -> To disable given OSD Window
 
 	10. stream <enable|disable>
 		enable - > to enable network streaming of captured frame
-		disable - > to disble network streaming of captured frame
+		disable - > to disable network streaming of captured frame
 
-	11. ls
+	11. date <enable|disable>
+		enable - > to enable date stamp over video display
+		disable - > to disable date stamp over video display
+
+	12. time <enable|disable>
+		enable - > to enable time stamp over video display
+		disable - > to disable time stamp over video display
+
+	13. ls
 		(to list all the commands)
 
-	12. clear
+	14. clear
 		(to clear the screen)
 
-	13. help
+	15. help
 		(help for command and cli usage)
 
-	14. exit
+	16. exit
 		(exits the cli program)
 
