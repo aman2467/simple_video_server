@@ -70,9 +70,8 @@ int main(int argc, char **argv )
 		SDL_Event e;
 
 		if(fread(frame,1,width*height*BPP,fp) < width*height*BPP) {
-			fclose(fp);
-			fp = fopen(argv[1],"rb");
-			if(fread(frame,1,width*height*BPP,fp) < width*height*BPP);
+			rewind(fp);
+			continue;
 		}
 		if (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
