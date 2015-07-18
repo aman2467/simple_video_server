@@ -80,6 +80,8 @@ int osdwintrans(int, int);
 int nw_stream(int);
 int enable_date(int);
 int enable_time(int);
+int valid_digit(char *);
+int is_valid_ip(char *);
 void watchdog(int);
 
 #endif

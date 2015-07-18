@@ -697,7 +697,13 @@ int main(int argc, char **argv)
 	}
 
 	if(argc > 1) {
-		strcpy(g_video_server_ip,argv[1]);
+		if(is_valid_ip(argv[1])) {
+			strcpy(g_video_server_ip,argv[1]);
+		} else {
+			printf("\nError : Enter Valid IP");
+			usage(argv[0]);
+			exit(0);
+		}
 	}
 
 	signal(SIGALRM, watchdog);

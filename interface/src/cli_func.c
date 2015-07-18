@@ -27,6 +27,8 @@
 extern char g_video_server_ip[16];
 extern int quit_flag;
 
+#define DOT "."
+
 /****************************************************************************
  * @usage : Called when SIGALRM signal is received, terminates the program
  *
@@ -59,6 +61,60 @@ void watchdog(int sig)
 		printf("\x1b[0m\n");
 		exit(0);
 	}
+}
+
+/****************************************************************************
+ * @usage : helper function to validate digits of an IP string
+ *
+ * @arg	: IP string
+ * @return     : success/failure
+ * *************************************************************************/
+int valid_digit(char *ip_str)
+{
+	while (*ip_str) {
+		if (*ip_str >= '0' && *ip_str <= '9')
+			++ip_str;
+		else
+			return 0;
+	}
+	return 1;
+}
+
+/****************************************************************************
+ * @usage : Validate the correctness of an IP string
+ *
+ * @arg	: IP string
+ * @return     : success/failure
+ * *************************************************************************/
+int is_valid_ip(char *ip_str)
+{
+	int i, num, dots = 0;
+	char *ptr;
+
+	if (ip_str == NULL)
+		return 0;
+	ptr = strtok(ip_str, DOT);
+	if (ptr == NULL)
+		return 0;
+	while (ptr) {
+		/* after parsing string, it must contain only digits */
+		if (!valid_digit(ptr))
+			return 0;
+		num = atoi(ptr);
+		/* check for valid IP */
+		if (num >= 0 && num <= 255) {
+			/* parse remaining string */
+			ptr = strtok(NULL, DOT);
+			if (ptr != NULL)
+				++dots;
+		} else
+			return 0;
+	}
+
+	/* valid IP string must contain 3 dots */
+	if (dots != 3)
+		return 0;
+	return 1;
 }
 
 /****************************************************************************
