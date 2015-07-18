@@ -428,7 +428,7 @@ int main(int argc, char **argv)
 			case COMMAND_SET_ENABLE_DATE:
 				arg1 = *((int *)data);
 				if(serverConfig->enable_osd_thread) {
-					set_osd_window_enable(OSD_WINDOW_NINE, arg1);
+					set_osd_window_enable(OSD_WINDOW_DATE, arg1);
 					ret = 0;
 				} else {
 					ret = 1;
@@ -437,7 +437,7 @@ int main(int argc, char **argv)
 			case COMMAND_SET_ENABLE_TIME:
 				arg1 = *((int *)data);
 				if(serverConfig->enable_osd_thread) {
-					set_osd_window_enable(OSD_WINDOW_EIGHT, arg1);
+					set_osd_window_enable(OSD_WINDOW_TIME, arg1);
 					ret = 0;
 				} else {
 					ret = 1;
