@@ -78,6 +78,15 @@ info:
 	${VERBOSE}echo "        ${GREEN}4. ${TARGET_T2}${NONE}"
 	${VERBOSE}echo " "
 	${VERBOSE}echo "${CYAN}========================================================================================"
+	${VERBOSE}echo "                                                                         \ "
+	${VERBOSE}echo "                                                                          \ "
+	${VERBOSE}echo "                                                                            ${GREEN}.--. "
+	${VERBOSE}echo "                                                                           |${RED}o${YELLOW}_${RED}o${GREEN} | "
+	${VERBOSE}echo "                                                                           |${YELLOW}:_/${GREEN} | "
+	${VERBOSE}echo "                                                                          //   \ \ "
+	${VERBOSE}echo "                                                                         (|     | ) "
+	${VERBOSE}echo "                                                                        /'\_   _/'\ "
+	${VERBOSE}echo "                                                                        \___)=(___/${NONE} "
 	${VERBOSE}echo " "
 
 install:
