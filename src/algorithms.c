@@ -71,6 +71,18 @@ void swap_uv(char *data, int size)
 }
 
 /****************************************************************************
+ * @usage : This function generates thermal equivalent of input video data/frame
+ *
+ * @arg1  : pointer to the video data
+ * @arg2  : size of video data
+ * @return     : void
+ * *************************************************************************/
+void convert_to_thermal(char *data, int size)
+{
+	memcpy(data, data+1, size-1);
+}
+
+/****************************************************************************
  * @usage : This function mirrors the frame vertically
  *
  * @arg1  : pointer to the video data
@@ -152,6 +164,17 @@ void apply_algo(char *frame, int enable)
 			break;
 		case ALGO_UVSWAP:
 			swap_uv(frame,serverConfig->capture.framesize);
+			break;
+		case ALGO_DARK_NEON:
+			ptr = frame;
+			pix_cnt = 1;
+			while(pix_cnt < serverConfig->capture.framesize) {
+				*(ptr+pix_cnt+1) = (0x7D>>1);
+				pix_cnt+=2;
+			}
+			break;
+		case ALGO_THERMAL:
+			convert_to_thermal(frame,serverConfig->capture.framesize);
 			break;
 		case ALGO_H_MIRROR:
 			horz_mirror(frame,serverConfig->capture.framesize);
