@@ -1,13 +1,13 @@
 Steps to create and display an OSD data:
 ----------------------------------------
-	1. Create an image(.jpg or .png) of required resolution(say 20x20)
+	1. Create an image(.jpg or .png) of required resolution(say mxn)
 	which has to be displayed over video.
 
 	2. Convert the image to required YUV format using following command-
-		$ ffmpeg -i filename.jpg -s 20x20 -pix_fmt <format> filename.yuv
-			where <format> will be according to the format of video data.
-			for ex:	 yuyv422 is for YUY2 video format
-			Here, 20x20	is the resolution of input image
+		$ ffmpeg -i filename.jpg -s mxn -pix_fmt <format> filename.yuv
+			where <format> is the video data format.
+				for ex:	 yuyv422 is for YUY2 video format.
+			mxn is the resolution of input image.
 
 	3. copy filename.yuv to database/ directory.
 
