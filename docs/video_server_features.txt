@@ -14,7 +14,7 @@
 	Dependencies :	1. OSD data MUST be same format as video data.
 
 	3> Can record video locally.
-		3.1> Option to select record type at run-time.(Not Implemented, by default Raw only)
+		3.1> Option to select record type at run-time.(Not Implemented)
 		3.2> Option to save with or without OSD data at run-time, enable by default.
 		3.3> File can be recorded as RAW or ENCODED(ex: h.264).(Only Raw can be recorded)
 		3.4> File saving will be on basis of time-stamp.
@@ -28,8 +28,8 @@
 		4.4> File type can be RAW or JPEG, based on user's choice.
 	Dependencies :	No.
 
-	5> Can transmit video data over network.
-		5.1> Video can either be RAW or ENCODED as per user's choice.(Only RAW is implemented)
+	5> Can transmit video data over network.(only RAW)
+		5.1> Video can either be RAW or ENCODED as per user's choice.
 		5.2> Only single stream is available.
 
 	6> Can display captured video Locally.
@@ -37,7 +37,7 @@
 		6.2> By default window size is based on capture resolution.
 		6.3> Local display supports all features(ex: with algo, with OSD).
 		6.4> Operations based on keystrokes detection locally.(ex: takesnap, record video, etc)
-		6.5> c->to capture a JPEG snapshot, v-> toggle to start/stop raw video recording
+		6.5> c-> to capture a JPEG snapshot, v-> toggle to start/stop video recording
 		6.6> right/left arrow to apply different algorithms, Esc-> to quit application.
 
 	7> All features can be controlled locally as well as remotely.(See docs/command_list.txt for details)
@@ -48,13 +48,15 @@
 		8.1> Any feature from video pipeline can be removed at load-time.
 
 	9> Can apply Video Algorithms(one at a time) at run-time on user's choice.
-		9.1> Removing chroma from video.
-		9.2> Cartoonise the video/snapshot.
-		9.3> stamp mode
-		9.4> swapping chroma components
-		9.5> horizontal mirror
-		9.6> vertical mirror
-		9.7> Multi mirror displays
-		9.8> Human Face-detection.(Not Implemented)
-		9.8> Thermal equivalent of video.(Not Implemented)
+		9.1>  Removing chroma from video.
+		9.2>  Cartoonise the video/snapshot.
+		9.3>  stamp mode
+		9.4>  swapping chroma components
+		9.5>  horizontal mirror
+		9.6>  Radium glow
+		9.7>  Green Ghost
+		9.8>  vertical mirror
+		9.9>  Multi mirror displays
+		9.10> Human Face-detection.(Not Implemented)
+		9.11> Thermal equivalent of video.(Not Implemented)
 

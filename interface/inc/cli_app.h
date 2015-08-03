@@ -19,7 +19,6 @@
 #define CLI_MAX_ARGS        6  /* Maximum number of Command Line arguments (incl. name) */
 #define CMND_LINE_MAX_LEN  40  /* Maximum permitted length of command string (chars) */
 #define MAX_COMMANDS      250  /* Maximum number of CLI commands (arbitrary) */
-#define MAX_ADC_CHN 4
 #define VIDEO_SERVER_PORT 2467
 
 #define UINT16 unsigned long int
