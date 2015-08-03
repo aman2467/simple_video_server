@@ -31,6 +31,7 @@
 	5> Can transmit video data over network.(only RAW)
 		5.1> Video can either be RAW or ENCODED as per user's choice.
 		5.2> Only single stream is available.
+	Dependencies :	1. Works only in home network(local LAN).
 
 	6> Can display captured video Locally.
 		6.1> Display window can be resizable.
@@ -39,24 +40,27 @@
 		6.4> Operations based on keystrokes detection locally.(ex: takesnap, record video, etc)
 		6.5> c-> to capture a JPEG snapshot, v-> toggle to start/stop video recording
 		6.6> right/left arrow to apply different algorithms, Esc-> to quit application.
+	Dependencies :	No.
 
 	7> All features can be controlled locally as well as remotely.(See docs/command_list.txt for details)
 		7.1> A separate user-app is available to communicate with video-server at run-time.
 		7.2> Communication between user-app and video-server is based on SOCKET comm.
+	Dependencies :	1. Works only in home network(local LAN).
 
 	8> Features with video-server will run, can be controlled by user at load-time.
 		8.1> Any feature from video pipeline can be removed at load-time.
+	Dependencies :	No.
 
 	9> Can apply Video Algorithms(one at a time) at run-time on user's choice.
 		9.1>  Removing chroma from video.
 		9.2>  Cartoonise the video/snapshot.
 		9.3>  stamp mode
 		9.4>  swapping chroma components
-		9.5>  horizontal mirror
-		9.6>  Radium glow
-		9.7>  Green Ghost
+		9.5>  Radium glow
+		9.6>  Green Ghost
+		9.7>  horizontal mirror
 		9.8>  vertical mirror
 		9.9>  Multi mirror displays
-		9.10> Human Face-detection.(Not Implemented)
+		9.10> Human Face-detection.(Not Implemented and in progress)
 		9.11> Thermal equivalent of video.(Not Implemented)
 
