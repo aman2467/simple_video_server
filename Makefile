@@ -50,6 +50,7 @@ all: video_server cli_app player nw_receiver info
 video_server:
 	${VERBOSE} sed -i "s,PATH,$(DATABASE_DIR),g"  $(BASEDIR)/inc/osd_thread.h
 	${VERBOSE} ${CC} ${SRC_DIR}/*.c ${CFLAGS} ${CPPFLAGS} ${LD_FLAGS} -o ${RELTARGET}
+	${VERBOSE} sed -i "s,${DATABASE_DIR},"PATH",g"  $(BASEDIR)/inc/osd_thread.h
 
 player:
 	${VERBOSE}gcc ${TOOLS_DIR}/${TARGET_T1}/${TARGET_T1}.c ${LD_FLAGS} ${CFLAGS} -o ${BIN_DIR}/${TARGET_T1}
