@@ -708,7 +708,13 @@ int main(int argc, char **argv)
 
 	signal(SIGALRM, watchdog);
 	while (1) {
-		printf("%s", prompt);
+		int i = 0;
+		printf("Commands :");
+		while(asCommand[i].pzName[0] != '$') {
+			printf("\x1b[01;32m %s",asCommand[i].pzName);
+			i++;
+		}
+		printf("\n\x1b[01;31m%s\x1b[0m", prompt);
 		scanf("%[^\n]", acCmndLine);
 
 		if (acCmndLine[0] == NUL || acCmndLine[0] == ESCAPE) {
