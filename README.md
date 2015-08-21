@@ -33,3 +33,6 @@ Running from command-line
 	> All the binaries including video_server can be run from command-line interface.
 	> Use '-h' with the binaries to get the usage.
 
+Screen-shot
+-----------
+[![](https://github.com/aman2467/simple_video_server/tree/master/utils/screenshot.png)](#features)
