@@ -9,6 +9,8 @@ Dependencies
 		2. JPEG Library
 			$ sudo apt-get install libjpeg-dev
 	> Above libraries should be installed before compiling app.
+	> Network transmission uses custom algorithm using UDP, <nw_receiver> utility is
+	required to validate the correctness of transmitted video data.
 
 Build and Installation
 ----------------------
@@ -35,4 +37,4 @@ Running from command-line
 
 Screen-shot
 -----------
-[![Running app screenshot](https://github.com/aman2467/simple_video_server/tree/master/utils/screenshot.png)]
+[![Running app screenshot](https://github.com/aman2467/simple_video_server/blob/gh-pages/images/screenshot.png)]
