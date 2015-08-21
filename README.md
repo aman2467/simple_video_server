@@ -35,4 +35,4 @@ Running from command-line
 
 Screen-shot
 -----------
-[![](https://github.com/aman2467/simple_video_server/tree/master/utils/screenshot.png)](#features)
+[![Running app screenshot](https://github.com/aman2467/simple_video_server/tree/master/utils/screenshot.png)](#features)
