@@ -63,7 +63,7 @@ void *captureThread(void)
 
 	if((fd = open(serverConfig->capture.device, O_RDWR, 0)) < 0) {
 		perror("video device open");
-		return NULL;
+		exit(0);
 	}
 
 	if(ioctl(fd, VIDIOC_QUERYCAP, &cap) == FAIL) {
@@ -78,7 +78,7 @@ void *captureThread(void)
 		printf("NO STREAMING SUPPORT\n");
 		return NULL;
 	}
- 
+
 	parm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 	parm.parm.capture.timeperframe.numerator = 1;
 	parm.parm.capture.timeperframe.denominator = 25;
@@ -121,8 +121,8 @@ void *captureThread(void)
 		buffers[i].length = buf.length;
 		buffers[i].offset = (size_t) buf.m.offset;
 		buffers[i].start = mmap(NULL, buffers[i].length,
-									PROT_READ | PROT_WRITE,
-									MAP_SHARED, fd, buffers[i].offset);
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED, fd, buffers[i].offset);
 		memset(buffers[i].start, 0xFF, buffers[i].length);
 	}
 
