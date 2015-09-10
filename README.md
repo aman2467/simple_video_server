@@ -14,6 +14,7 @@ Dependencies
 
 Build and Installation
 ----------------------
+	> ./install.sh
 	> make
 	> make install	(sudo may require)
 
