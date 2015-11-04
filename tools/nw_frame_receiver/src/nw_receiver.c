@@ -125,7 +125,8 @@ void addpacket(char *video_packet)
 	newpacket->line_num = *(int *)num;
 	memcpy(tempdata, video_packet + LINE_NUM_SIZE, FRAME_NUM_SIZE);
 	newpacket->frame_num = *(int *)num;
-	memcpy(newpacket->packetbuff, video_packet + VALID_DATA, packetsize - VALID_DATA);
+	memcpy(newpacket->packetbuff, video_packet + VALID_DATA,
+	       packetsize - VALID_DATA);
 	newpacket->next=NULL;
 	free(tempdata);
 
@@ -161,7 +162,8 @@ void poppacket(VIDEO_DATA *empty_packet)
 	curr_head = q_head;
 	empty_packet->frame_num = curr_head->frame_num;
 	empty_packet->line_num = curr_head->line_num;
-	memcpy(empty_packet->packetbuff, curr_head->packetbuff, packetsize - VALID_DATA);
+	memcpy(empty_packet->packetbuff, curr_head->packetbuff,
+	       packetsize - VALID_DATA);
 	free(curr_head->packetbuff);
 	q_head = curr_head->next;
 	free(curr_head);
@@ -193,7 +195,7 @@ int sizeofqueue(void)
 void usage(char *name)
 {
 	printf("Help : %s -h	(show this help)\n",name);
-	printf("Usage: %s -w <width> -h <height> -v <video_port>\n",name);
+	printf("Usage: %s -w <width> -h <height> -p <video_port>\n",name);
 }
 
 /**********************************************************************
@@ -226,7 +228,7 @@ int main(int argc, char **argv)
 		} else if (strcmp(argv[i], "-h") == 0) {
 			g_capture_height = atoi(argv[++i]);
 			g_last_line = g_capture_height/LINE_CNT;
-		} else if (strcmp(argv[i], "-v") == 0) {
+		} else if (strcmp(argv[i], "-p") == 0) {
 			g_video_port = atoi(argv[++i]);
 		} else if (strcmp(argv[i], "-c") == 0) {
 #ifdef LOCAL_DISPLAY
@@ -283,7 +285,8 @@ int main(int argc, char **argv)
 	recvbuff = (char *)calloc(10, packetsize);
 	while(TRUE) {
 		/* receive video packets and push to queue */
-		if((recvfrom(sd_vdo, recvbuff, packetsize, 0, (struct sockaddr *)&sendr_addr, &sendr_len))<0) {
+		if((recvfrom(sd_vdo, recvbuff, packetsize, 0,
+			     (struct sockaddr *)&sendr_addr, &sendr_len))<0) {
 			perror("recvfrom");
 			exit(0);
 		}

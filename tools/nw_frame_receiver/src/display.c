@@ -64,12 +64,13 @@ void displayThread(void)
 	popped->packetbuff = (char *)calloc(1, packetsize - VALID_DATA);
 #ifdef LOCAL_DISPLAY
 	SDL_Init(SDL_INIT_VIDEO);
-	snprintf(resolution, 20, "Capture : %dx%d", g_capture_width,g_capture_height);
-	win = SDL_CreateWindow(resolution, 
-			SDL_WINDOWPOS_CENTERED, 
-			SDL_WINDOWPOS_CENTERED, 
-			g_capture_width, 
-			g_capture_height, 
+	snprintf(resolution, 20, "Receiver : %dx%d", g_capture_width,
+		 g_capture_height);
+	win = SDL_CreateWindow(resolution,
+			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED,
+			g_capture_width,
+			g_capture_height,
 			SDL_WINDOW_RESIZABLE);
 
 	renderer = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
@@ -116,12 +117,14 @@ void displayThread(void)
 		}
 		if(popped->line_num == FIRST_LINE) {
 			lineseeker = g_displaybuff;
-			memcpy(lineseeker, popped->packetbuff, packetsize - VALID_DATA);
+			memcpy(lineseeker, popped->packetbuff,
+			       packetsize - VALID_DATA);
 			lineseeker += (packetsize - VALID_DATA);
 			linecnt ++;
 			prevline = FIRST_LINE;
 		} else if(popped->line_num == g_last_line) {
-			memcpy(lineseeker, popped->packetbuff, packetsize - VALID_DATA);
+			memcpy(lineseeker, popped->packetbuff,
+			       packetsize - VALID_DATA);
 			linecnt++;
 			if(linecnt == g_last_line) {
 #ifdef LOCAL_DISPLAY
@@ -146,7 +149,8 @@ void displayThread(void)
 			prevline = 0;
 		} else if(prevframe == popped->frame_num) {
 			if(popped->line_num == prevline + 1) {
-				memcpy(lineseeker, popped->packetbuff, packetsize - VALID_DATA);
+				memcpy(lineseeker, popped->packetbuff,
+				       packetsize - VALID_DATA);
 				lineseeker += packetsize - VALID_DATA;
 				linecnt ++;
 			}

@@ -37,7 +37,7 @@
 #define pr_dbg //
 #endif
 
-//#define LOCAL_DISPLAY
+#define LOCAL_DISPLAY
 #ifndef LOCAL_DISPLAY
 #define NO_OF_FRAMES_TO_SAVE 100
 #endif
