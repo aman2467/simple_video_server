@@ -20,6 +20,8 @@
 #define CMND_LINE_MAX_LEN  40  /* Maximum permitted length of command string (chars) */
 #define MAX_COMMANDS      250  /* Maximum number of CLI commands (arbitrary) */
 #define VIDEO_SERVER_PORT 2467
+#define USER_PROMPT
+//#define DISPLAY_COMMANDS
 
 #define UINT16 unsigned long int
 #define UINT8 unsigned int

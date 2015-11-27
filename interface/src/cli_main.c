@@ -18,7 +18,7 @@
 #define TRUE 1
 #define FALSE 0
 
-char prompt[16] = "CLI:/> ";
+char prompt[50] = "CLI:/> ";
 char g_video_server_ip[16] = "127.0.0.1";
 int quit_flag = FALSE;
 
@@ -685,6 +685,24 @@ void usage(char *name)
  ******************************************/
 int main(int argc, char **argv)
 {
+#ifdef USER_PROMPT
+	FILE *fp;
+	char host[10] = {0};
+	char *env = getenv("USER");
+	if(env != NULL) {
+		strcpy(prompt, env);
+		strcat(prompt, "@");
+		system("hostname > .dummy");
+		fp = fopen(".dummy","r");
+		if(fp != NULL) {
+			fread(host, 30, 1, fp);
+			strncat(prompt, host, strlen(host) - 1);
+			strcat(prompt, " : ");
+			fclose(fp);
+		}
+		system("rm .dummy");
+	}
+#endif
 
 	if(argc > 2) {
 		usage(argv[0]);
@@ -709,12 +727,14 @@ int main(int argc, char **argv)
 	signal(SIGALRM, watchdog);
 	while (1) {
 		int i = 0;
+#ifdef DISPLAY_COMMANDS
 		printf("Commands :");
 		while(asCommand[i].pzName[0] != '$') {
 			printf("\x1b[01;32m %s",asCommand[i].pzName);
 			i++;
 		}
-		printf("\n\x1b[01;31m%s\x1b[0m", prompt);
+#endif
+		printf("\x1b[01;31m%s\x1b[0m", prompt);
 		scanf("%[^\n]", acCmndLine);
 
 		if (acCmndLine[0] == NUL || acCmndLine[0] == ESCAPE) {
