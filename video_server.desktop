@@ -1,7 +1,7 @@
 #!/usr/bin/env xdg-open
 [Desktop Entry]
 Name=video_server
-Exec=/usr/local/bin/video_server
+Exec=/usr/local/bin/video_server display osd videosave imagesave stream
 Terminal=false
 Type=Application
 Icon=/usr/share/svs/logo.png
