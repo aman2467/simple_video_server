@@ -1,4 +1,4 @@
-/* ================================================================================
+/*
  * @file    : display.c
  *
  * @description : This file contains code to display valid received video frame.
@@ -10,7 +10,7 @@
  *              at the following locations:
  *              http://www.opensource.org/licenses/gpl-license.html
  *              http://www.gnu.org/copyleft/gpl.html
- * ================================================================================*/
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -82,51 +82,54 @@ void displayThread(void)
 #else
 	fp = fopen(g_filename, "wb");
 #endif
-	while(!KillDisplayThread) {
-		if((sizeofqueue() > 0) && (g_displaybuff)) {
+	while (!KillDisplayThread) {
+		if ((sizeofqueue() > 0) && (g_displaybuff))
 			poppacket(popped);
-		} else {
+		else {
+			usleep(5);
 			continue;
 		}
 
-		if(flag == 0) {
+		if (flag == 0) {
 			g_skipframe = popped->frame_num;
 			prevframe = popped->frame_num;
-			pr_dbg("Frame %d is going to skip\n",g_skipframe);
+			pr_dbg("Frame %d is going to skip\n",
+			       g_skipframe);
 			flag = 1;
 		}
 #if 0
 		/* check SDL event if any */
 		if (SDL_PollEvent(&e)) {
-			if (e.type == SDL_QUIT) {
+			if (e.type == SDL_QUIT)
 				break;
-			} else if(e.key.type == SDL_KEYUP) {
-				switch(e.key.keysym.sym) {
-					case SDLK_ESCAPE:
-						kill = TRUE;
-						break;
-					default:
-						break;
+			else if (e.key.type == SDL_KEYUP) {
+				switch (e.key.keysym.sym) {
+				case SDLK_ESCAPE:
+					kill = TRUE;
+					break;
+				default:
+					break;
 				}
-				if(kill) break;
+				if (kill)
+					break;
 			}
 		}
 #endif
-		if(g_skipframe == popped->frame_num) {
+		if (g_skipframe == popped->frame_num)
 			continue;
-		}
-		if(popped->line_num == FIRST_LINE) {
+
+		if (popped->line_num == FIRST_LINE) {
 			lineseeker = g_displaybuff;
 			memcpy(lineseeker, popped->packetbuff,
 			       packetsize - VALID_DATA);
 			lineseeker += (packetsize - VALID_DATA);
-			linecnt ++;
+			linecnt++;
 			prevline = FIRST_LINE;
-		} else if(popped->line_num == g_last_line) {
+		} else if (popped->line_num == g_last_line) {
 			memcpy(lineseeker, popped->packetbuff,
 			       packetsize - VALID_DATA);
 			linecnt++;
-			if(linecnt == g_last_line) {
+			if (linecnt == g_last_line) {
 #ifdef LOCAL_DISPLAY
 				/* display frame*/
 				SDL_UpdateTexture(texture, 0,
@@ -138,7 +141,7 @@ void displayThread(void)
 #else
 				/* save frame */
 				fwrite(g_displaybuff, buffsize, 1, fp);
-				if(frame_cnt++ > no_of_frames_to_save) {
+				if (frame_cnt++ > no_of_frames_to_save) {
 					fclose(fp);
 					exit(0);
 				}
@@ -147,12 +150,12 @@ void displayThread(void)
 			lineseeker = g_displaybuff;
 			linecnt = 0;
 			prevline = 0;
-		} else if(prevframe == popped->frame_num) {
-			if(popped->line_num == prevline + 1) {
+		} else if (prevframe == popped->frame_num) {
+			if (popped->line_num == prevline + 1) {
 				memcpy(lineseeker, popped->packetbuff,
 				       packetsize - VALID_DATA);
 				lineseeker += packetsize - VALID_DATA;
-				linecnt ++;
+				linecnt++;
 			}
 			prevline = popped->line_num;
 		} else {
@@ -162,9 +165,8 @@ void displayThread(void)
 			g_skipframe = popped->frame_num;
 			prevline = popped->line_num;
 		}
-		if(prevframe != popped->frame_num) {
+		if (prevframe != popped->frame_num)
 			prevframe = popped->frame_num;
-		}
 	}
 #ifdef LOCAL_DISPLAY
 	SDL_DestroyTexture(texture);

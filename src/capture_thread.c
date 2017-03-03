@@ -1,4 +1,4 @@
-/* ==========================================================================
+/*
  * @file    : capture_thread.c
  *
  * @description : This file contains the video capture thread.
@@ -6,11 +6,11 @@
  * @author  : Aman Kumar (2015)
  *
  * @copyright   : The code contained herein is licensed under the GNU General
- *				Public License. You may obtain a copy of the GNU General
- *				Public License Version 2 or later at the following locations:
+ *		Public License. You may obtain a copy of the GNU General
+ *		Public License Version 2 or later at the following locations:
  *              http://www.opensource.org/licenses/gpl-license.html
  *              http://www.gnu.org/copyleft/gpl.html
- * ========================================================================*/
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,13 +38,14 @@ extern char *g_streambuff;
 extern int current_task;
 extern lock_t buf_lock;
 
-/****************************************************************************
- * @function : This is the capture thread main function. It captures video frames
- *          using V4l2 and passes those buffers to other threads.
+/*
+ * @function : This is the capture thread main function.
+ * It captures video frames using V4l2 and passes those
+ * buffers to other threads.
  *
  * @arg  : void
  * @return     : void
- * *************************************************************************/
+ */
 void *captureThread(void)
 {
 	int fd, i;
@@ -52,8 +53,6 @@ void *captureThread(void)
 	enum v4l2_buf_type type;
 	struct v4l2_capability cap;
 	struct v4l2_streamparm parm;
-//	struct v4l2_cropcap cropcap;
-//	struct v4l2_crop crop;
 	struct v4l2_format fmt;
 	struct v4l2_requestbuffers req;
 	struct v4l2_buffer buf;
@@ -61,12 +60,13 @@ void *captureThread(void)
 
 	SERVER_CONFIG *serverConfig = GetServerConfig();
 
-	if((fd = open(serverConfig->capture.device, O_RDWR, 0)) < 0) {
+	fd = open(serverConfig->capture.device, O_RDWR, 0);
+	if (fd < 0) {
 		perror("video device open");
 		exit(0);
 	}
 
-	if(ioctl(fd, VIDIOC_QUERYCAP, &cap) == FAIL) {
+	if (ioctl(fd, VIDIOC_QUERYCAP, &cap) == FAIL) {
 		perror("VIDIOC_QUERYCAP");
 		return NULL;
 	}
@@ -108,7 +108,7 @@ void *captureThread(void)
 		return NULL;
 	}
 
-	for(i = 0; i < NUM_BUFFER; i++) {
+	for (i = 0; i < NUM_BUFFER; i++) {
 		memset(&buf, 0, sizeof(buf));
 		buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 		buf.memory = V4L2_MEMORY_MMAP;
@@ -127,67 +127,80 @@ void *captureThread(void)
 	}
 
 	for (i = 0; i < NUM_BUFFER; i++) {
-		memset(&buf, 0, sizeof (buf));
+		memset(&buf, 0, sizeof(buf));
 		buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 		buf.memory = V4L2_MEMORY_MMAP;
 		buf.index = i;
 		buf.m.offset = buffers[i].offset;
-		if (ioctl (fd, VIDIOC_QBUF, &buf) == FAIL) {
+		if (ioctl(fd, VIDIOC_QBUF, &buf) == FAIL) {
 			perror("VIDIOC_QBUF");
 			return NULL;
 		}
 	}
 
 	type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	if (ioctl (fd, VIDIOC_STREAMON, &type) == FAIL) {
+	if (ioctl(fd, VIDIOC_STREAMON, &type) == FAIL) {
 		perror("VIDIOC_STREAMON");
 		return NULL;
 	}
 	i = 0;
 	frame_cnt = 0;
-	while(!KillCaptureThread) {
-		memset(&buf, 0, sizeof buf);
+	while (!KillCaptureThread) {
+		memset(&buf, 0, sizeof(buf));
 		buf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 		buf.memory = V4L2_MEMORY_MMAP;
-		if(ioctl(fd, VIDIOC_DQBUF, &buf) == FAIL) {
+		if (ioctl(fd, VIDIOC_DQBUF, &buf) == FAIL) {
 			perror("VIDIOC_DQBUF");
 			return NULL;
 		}
 		frame_cnt++;
-		if(serverConfig->enable_videosave_thread) {
+		if (serverConfig->enable_videosave_thread) {
 			lock(&buf_lock);
-			memcpy(g_framebuff[i],buffers[buf.index].start,serverConfig->capture.framesize);
+			memcpy(g_framebuff[i], buffers[buf.index].start,
+			       serverConfig->capture.framesize);
 			unlock(&buf_lock);
 		}
-		if(serverConfig->enable_stream_thread && serverConfig->stream.enable) {
-			memcpy(g_streambuff, buffers[buf.index].start, serverConfig->capture.framesize);
+		if (serverConfig->enable_stream_thread &&
+		    serverConfig->stream.enable) {
+			memcpy(g_streambuff, buffers[buf.index].start,
+			       serverConfig->capture.framesize);
 		}
-		if(!serverConfig->enable_osd_thread) {
-			if(serverConfig->enable_display_thread) {
-				memcpy(serverConfig->disp.display_frame,buffers[buf.index].start,serverConfig->capture.framesize);
-				if(serverConfig->algo_type) {
-					apply_algo(serverConfig->disp.display_frame,serverConfig->algo_type);
-					memcpy(serverConfig->disp.sdl_frame,serverConfig->disp.display_frame,serverConfig->capture.framesize);
+		if (!serverConfig->enable_osd_thread) {
+			if (serverConfig->enable_display_thread) {
+				memcpy(serverConfig->disp.display_frame,
+				       buffers[buf.index].start,
+				       serverConfig->capture.framesize);
+				if (serverConfig->algo_type) {
+					apply_algo(serverConfig->disp.display_frame,
+						   serverConfig->algo_type);
+					memcpy(serverConfig->disp.sdl_frame,
+					       serverConfig->disp.display_frame,
+					       serverConfig->capture.framesize);
 				}
 			}
 		}
-		if(serverConfig->enable_imagesave_thread && !serverConfig->image.osd_on) {
-			if(serverConfig->image.recordenable) {
+		if (serverConfig->enable_imagesave_thread &&
+		    !serverConfig->image.osd_on) {
+			if (serverConfig->image.recordenable) {
 				serverConfig->image.recordenable = FALSE;
-				serverConfig->jpeg.framebuff = calloc(serverConfig->capture.framesize, 1);
+				serverConfig->jpeg.framebuff =
+					calloc(serverConfig->capture.framesize,
+					       1);
 				lock(&buf_lock);
-				memcpy(serverConfig->jpeg.framebuff,buffers[buf.index].start, serverConfig->capture.framesize);
+				memcpy(serverConfig->jpeg.framebuff,
+				       buffers[buf.index].start,
+				       serverConfig->capture.framesize);
 				unlock(&buf_lock);
 			}
 		}
-		if(serverConfig->enable_osd_thread) {
+		if (serverConfig->enable_osd_thread)
 			g_osdflag = 1;
-		} else if(serverConfig->enable_videosave_thread) {
+		else if (serverConfig->enable_videosave_thread)
 			g_writeflag = 1;
-		}
 		i++;
-		if(i > NUM_BUFFER-1) i = 0;
-		if(ioctl(fd, VIDIOC_QBUF, &buf) == FAIL) {
+		if (i > (NUM_BUFFER - 1))
+			i = 0;
+		if (ioctl(fd, VIDIOC_QBUF, &buf) == FAIL) {
 			perror("VIDIOC_QBUF");
 			return NULL;
 		}

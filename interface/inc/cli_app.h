@@ -1,4 +1,4 @@
-/* ==========================================================================
+/*
  * @file    : cli_app.h
  *
  * @description : This file contains common definitions and declaration for
@@ -7,18 +7,24 @@
  * @author  : Aman Kumar (2015)
  *
  * @copyright   : The code contained herein is licensed under the GNU General
- *				Public License. You may obtain a copy of the GNU General
- *				Public License Version 2 or later at the following locations:
+ *		Public License. You may obtain a copy of the GNU General
+ *		Public License Version 2 or later at the following locations:
  *              http://www.opensource.org/licenses/gpl-license.html
  *              http://www.gnu.org/copyleft/gpl.html
- * ========================================================================*/
+ */
 
 #ifndef _CLI_APP_H_
 #define _CLI_APP_H_
 
-#define CLI_MAX_ARGS        6  /* Maximum number of Command Line arguments (incl. name) */
-#define CMND_LINE_MAX_LEN  40  /* Maximum permitted length of command string (chars) */
-#define MAX_COMMANDS      250  /* Maximum number of CLI commands (arbitrary) */
+/* Maximum number of Command Line arguments (incl. name) */
+#define CLI_MAX_ARGS        6
+
+/* Maximum permitted length of command string (chars) */
+#define CMND_LINE_MAX_LEN  40
+
+/* Maximum number of CLI commands (arbitrary) */
+#define MAX_COMMANDS      250
+
 #define VIDEO_SERVER_PORT 2467
 #define USER_PROMPT
 //#define DISPLAY_COMMANDS
@@ -37,13 +43,14 @@
 
 #define WAIT_TIME 3
 
-typedef  void (*CLIfunc)(UINT16 argc, char *argv[]);      /* pointer to CLI function */
+/* pointer to CLI function */
+typedef void (*CLIfunc)(UINT16 argc, char *argv[]);
 
 /* Command table entry looks like this */
 struct  CmndTableEntry_t {
-	char   *pzName;       /* command function name */
-	UINT8     yAttribute;  /* User Command or Debug Command */
-	CLIfunc  Function;     /* pointer to CLI function */
+	char   *pzName;      /* command function name */
+	UINT8   yAttribute;  /* User Command or Debug Command */
+	CLIfunc Function;    /* pointer to CLI function */
 };
 
 /*****************************************************************
@@ -68,21 +75,21 @@ void CmndHelp(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndClearScreen(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 void CmndExit(UINT16 uwCmndArgCount, char *apcCmndArgVal[]);
 
-int sendCommand(int, char *);
-int takesnap(int);
-int recordvideo(int);
-int setalgotype(int);
-int osdwinenable(int, int);
-int osdwintext(int, char *);
-int osdwinpos(int, int, int);
-int osdonimage(int);
-int osdonvideo(int);
-int osdwintrans(int, int);
-int nw_stream(int);
-int enable_date(int);
-int enable_time(int);
-int valid_digit(char *);
-int is_valid_ip(char *);
-void watchdog(int);
+int sendCommand(int command, char *args);
+int takesnap(int value);
+int recordvideo(int value);
+int setalgotype(int algo);
+int osdwinenable(int window, int enable);
+int osdwintext(int window, char *data);
+int osdwinpos(int window, int x, int y);
+int osdonimage(int enable);
+int osdonvideo(int enable);
+int osdwintrans(int window, int enable);
+int nw_stream(int enable);
+int enable_date(int enable);
+int enable_time(int enable);
+int valid_digit(char *digit);
+int is_valid_ip(char *ip);
+void watchdog(int signal);
 
-#endif
+#endif /* _CLI_APP_H_ */

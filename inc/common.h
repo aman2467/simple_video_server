@@ -1,4 +1,4 @@
-/* ==========================================================================
+/*
  * @file    : common.h
  *
  * @description : This file contains common definitions and declaration for
@@ -7,14 +7,14 @@
  * @author  : Aman Kumar (2015)
  *
  * @copyright   : The code contained herein is licensed under the GNU General
- *				Public License. You may obtain a copy of the GNU General
- *				Public License Version 2 or later at the following locations:
+ *		Public License. You may obtain a copy of the GNU General
+ *		Public License Version 2 or later at the following locations:
  *              http://www.opensource.org/licenses/gpl-license.html
  *              http://www.gnu.org/copyleft/gpl.html
- * ========================================================================*/
+ */
 
-#ifndef _COMMON_H
-#define _COMMON_H
+#ifndef _COMMON_H_
+#define _COMMON_H_
 #include <lock.h>
 
 /*******************************USEFUL TO USER******************************/
@@ -23,7 +23,7 @@
 #define _DEBUG
 #define NUM_BUFFER 10
 #define OSD_MAX_WINDOW 10
-#define OSD_TEXT_MAX_LENGTH 20 
+#define OSD_TEXT_MAX_LENGTH 20
 #define BPP 2
 #define CLI_SER_PORT 2467
 #define LINE_CNT 1
@@ -79,6 +79,7 @@ enum algotype {
 	ALGO_UVSWAP,
 	ALGO_DARK_NEON,
 	ALGO_THERMAL,
+	ALGO_TEST,
 	ALGO_H_MIRROR,
 	ALGO_V_MIRROR,
 	ALGO_MULTI_1,
@@ -175,14 +176,14 @@ int KillJpegsaveThread;
 int KillDisplayThread;
 int KillStreamThread;
 
-void apply_algo(char *, int);
-void getcurrenttime(DATE_TIME *);
-void set_osd_window_enable(int, int);
-void set_osd_window_text(int, char *);
-void set_osd_window_position(int, int, int);
-void set_osd_window_transparency(int, int);
-void update_osd_window(int);
+void apply_algo(char *frame, int size);
+void getcurrenttime(DATE_TIME *curr);
+void set_osd_window_enable(int window, int enable);
+void set_osd_window_text(int window, char *string);
+void set_osd_window_position(int window, int posx, int posy);
+void set_osd_window_transparency(int window, int enable);
+void update_osd_window(int window);
 char *get_frame(void);
 SERVER_CONFIG *GetServerConfig(void);
 
-#endif
+#endif /* _COMMON_H_ */

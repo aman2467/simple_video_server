@@ -1,8 +1,8 @@
 /*
- * @file    : lock.h
+ * @file    : face.h
  *
- * @description : This file contains lock specific declaration and
- *           prototypes.
+ * @description : This file contains common definitions and declaration for
+ *           the application.
  *
  * @author  : Aman Kumar (2015)
  *
@@ -13,16 +13,17 @@
  *              http://www.gnu.org/copyleft/gpl.html
  */
 
-#ifndef _LOCK_H_
-#define _LOCK_H_
+#ifndef _FACE_H_
+#define _FACE_H_
 
-typedef struct lock {
-	int lock;
-} lock_t;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void lock_init(lock_t *lock);
-void lock(lock_t *lock);
-void unlock(lock_t *lock);
-void spin(void);
+int face_detect_init(void);
+int face_detect_and_draw(unsigned char *frame, int x, int y);
 
-#endif /* _LOCK_H_ */
+#ifdef __cplusplus
+}
+#endif
+#endif /* _FACE_H_ */

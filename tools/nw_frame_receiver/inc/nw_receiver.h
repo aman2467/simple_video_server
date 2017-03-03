@@ -1,4 +1,4 @@
-/* ==================================================================================
+/*
  * @file    : nw_receiver.h
  *
  * @description : This file contains common definitions and declaration for the
@@ -11,7 +11,7 @@
  *              at the following locations:
  *              http://www.opensource.org/licenses/gpl-license.html
  *              http://www.gnu.org/copyleft/gpl.html
- * ===========================================================================*/
+ */
 
 #ifndef _NW_RECEIVER_H
 #define _NW_RECEIVER_H
