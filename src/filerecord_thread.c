@@ -84,7 +84,7 @@ void *filerecordThread(void)
 			usleep(50);
 		if (serverConfig->video.recordenable == TRUE) {
 			get_video_filename(filename, serverConfig->video.type);
-			fp = fopen(filename, "w"));
+			fp = fopen(filename, "w");
 			if (fp == NULL) {
 				perror("FOPEN");
 				return NULL;

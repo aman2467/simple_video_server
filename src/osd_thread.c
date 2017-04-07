@@ -163,7 +163,7 @@ void *osdThread(void)
 	init_OSDWindows();
 
 	osd_data_ptr = calloc(400*400*2, 1);
-	if ((osd_data_ptr == NULL) {
+	if (osd_data_ptr == NULL) {
 		printf("Memory not allocated to OSD\n");
 		return 0;
 	}

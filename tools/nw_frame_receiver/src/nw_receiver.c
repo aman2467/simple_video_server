@@ -50,7 +50,7 @@ char g_board_ip[20];
 lock_t q_lock;
 lock_t cnt_lock;
 
-VIDEO_DATA *q_head = NULL, *q_taili = NULL;
+VIDEO_DATA *q_head = NULL, *q_tail = NULL;
 
 extern void *displayThread(void *);
 
@@ -241,6 +241,7 @@ int main(int argc, char **argv)
 #ifdef LOCAL_DISPLAY
 			printf("\nLocal file save disabled.\n");
 			printf("Undefine LOCAL_DISPLAY and recompile to enable this.\n");
+		}
 #else
 			no_of_frames_to_save = atoi(argv[++i]);
 		} else if (strcmp(argv[i], "-o") == 0)
