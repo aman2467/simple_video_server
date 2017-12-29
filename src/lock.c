@@ -13,6 +13,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 #include <lock.h>
 
 /*

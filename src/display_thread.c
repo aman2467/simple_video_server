@@ -13,6 +13,7 @@
  */
 
 #include <stdio.h>
+#include <unistd.h>
 #include <common.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_pixels.h>

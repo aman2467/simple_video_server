@@ -14,7 +14,7 @@
 
 VERBOSE = @
 BASEDIR = $(PWD)
-TARGET =video_server
+TARGET =video-server
 TARGET_T1=test_player
 TARGET_T2=nw_frame_receiver
 #CC =arm-poky-linux-gnueabi-gcc
@@ -26,7 +26,8 @@ YELLOW=\033[01;33m
 CYAN=\033[01;36m
 SRC_DIR =$(BASEDIR)/src
 INTERFACE_DIR=$(BASEDIR)/interface/src
-DATABASE_DIR=${BASEDIR}/database
+#DATABASE_DIR=${BASEDIR}/database
+DATABASE_DIR=/usr/share/svs
 BIN_DIR=$(BASEDIR)/bin
 LIB_DIR=$(BASEDIR)/lib
 TOOLS_DIR=$(BASEDIR)/tools
@@ -59,36 +60,36 @@ nw_receiver:
 	${VERBOSE}make -s -C ${TOOLS_DIR}/${TARGET_T2}/ all
 
 cli_app:
-	${VERBOSE}gcc ${INTERFACE_DIR}/*.c ${CPPFLAGS} -o ${BIN_DIR}/cli_app
+	${VERBOSE}gcc ${INTERFACE_DIR}/*.c ${CPPFLAGS} -o ${BIN_DIR}/cli-app
 
 clean:
 	${VERBOSE}rm -f $(BIN_DIR)/*
-	${VERBOSE}echo -e "All Binaries ${RED}removed${NONE}"
+	${VERBOSE}echo  "All Binaries ${RED}removed${NONE}"
 
 info:
-	${VERBOSE}echo -e "                                         ${YELLOW}<<#|#>> "
-	${VERBOSE}echo -e "                                         -(${RED}o o${YELLOW})-${NONE}"
-	${VERBOSE}echo -e "${CYAN}======================================${YELLOW}oOO${CYAN}==${YELLOW}(${RED}^${YELLOW})${CYAN}==${YELLOW}OOo${CYAN}=====================================${NONE}"
-	${VERBOSE}echo -e " "
-	${VERBOSE}echo -e "${YELLOW}Binary Path :"
-	${VERBOSE}echo -e "        ${GREEN}${BIN_DIR}/${NONE}"
-	${VERBOSE}echo -e "${YELLOW}Binaries :"
-	${VERBOSE}echo -e "        ${GREEN}1. ${TARGET}${NONE}"
-	${VERBOSE}echo -e "        ${GREEN}2. cli_app${NONE}"
-	${VERBOSE}echo -e "        ${GREEN}3. ${TARGET_T1}${NONE}"
-	${VERBOSE}echo -e "        ${GREEN}4. ${TARGET_T2}${NONE}"
-	${VERBOSE}echo -e " "
-	${VERBOSE}echo -e "${CYAN}========================================================================================"
-	${VERBOSE}echo -e "                                                                         \ "
-	${VERBOSE}echo -e "                                                                          \ "
-	${VERBOSE}echo -e "                                                                            ${GREEN}.--. "
-	${VERBOSE}echo -e "                                                                           |${RED}o${YELLOW}_${RED}o${GREEN} | "
-	${VERBOSE}echo -e "                                                                           |${YELLOW}:_/${GREEN} | "
-	${VERBOSE}echo -e "                                                                          //   \ \ "
-	${VERBOSE}echo -e "                                                                         (|     | ) "
-	${VERBOSE}echo -e "                                                                        /'\_   _/'\ "
-	${VERBOSE}echo -e "                                                                        \___)=(___/${NONE} "
-	${VERBOSE}echo -e " "
+	${VERBOSE}echo  "                                         ${YELLOW}<<#|#>> "
+	${VERBOSE}echo  "                                         -(${RED}o o${YELLOW})-${NONE}"
+	${VERBOSE}echo  "${CYAN}======================================${YELLOW}oOO${CYAN}==${YELLOW}(${RED}^${YELLOW})${CYAN}==${YELLOW}OOo${CYAN}=====================================${NONE}"
+	${VERBOSE}echo  " "
+	${VERBOSE}echo  "${YELLOW}Binary Path :"
+	${VERBOSE}echo  "        ${GREEN}${BIN_DIR}/${NONE}"
+	${VERBOSE}echo  "${YELLOW}Binaries :"
+	${VERBOSE}echo  "        ${GREEN}1. ${TARGET}${NONE}"
+	${VERBOSE}echo  "        ${GREEN}2. cli_app${NONE}"
+	${VERBOSE}echo  "        ${GREEN}3. ${TARGET_T1}${NONE}"
+	${VERBOSE}echo  "        ${GREEN}4. ${TARGET_T2}${NONE}"
+	${VERBOSE}echo  " "
+	${VERBOSE}echo  "${CYAN}========================================================================================"
+	${VERBOSE}echo  "                                                                         \ "
+	${VERBOSE}echo  "                                                                          \ "
+	${VERBOSE}echo  "                                                                            ${GREEN}.--. "
+	${VERBOSE}echo  "                                                                           |${RED}o${YELLOW}_${RED}o${GREEN} | "
+	${VERBOSE}echo  "                                                                           |${YELLOW}:_/${GREEN} | "
+	${VERBOSE}echo  "                                                                          //   \ \ "
+	${VERBOSE}echo  "                                                                         (|     | ) "
+	${VERBOSE}echo  "                                                                        /'\_   _/'\ "
+	${VERBOSE}echo  "                                                                        \___)=(___/${NONE} "
+	${VERBOSE}echo  " "
 
 install:
 	${VERBOSE}sudo mkdir -p /usr/share/svs
